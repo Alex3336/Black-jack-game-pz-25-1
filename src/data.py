@@ -1,8 +1,10 @@
 import json
 import os
 from flask import Flask, jsonify, redirect, url_for
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
 base_path = os.path.dirname(os.path.abspath(__file__))
 json_path = os.path.join(base_path, "cards.json")
@@ -25,4 +27,5 @@ def get_cards():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port)
