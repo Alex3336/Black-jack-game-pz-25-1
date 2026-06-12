@@ -1,33 +1,26 @@
-import json
-import os
-from flask import Flask, jsonify, redirect, url_for
+from flask import Flask, send_from_directory
 from flask_cors import CORS
+import os
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder="../build", static_url_path="")
+
 CORS(app)
-
-base_path = os.path.dirname(os.path.abspath(__file__))
-json_path = os.path.join(base_path, "cards.json")
-
-if os.path.exists(json_path):
-    with open(json_path, "r", encoding="utf-8") as f:
-        cards = json.load(f)
-else:
-    print(
-        f"Попередження: Файл не знайдено за шляхом {json_path}. Створюємо порожній список."
-    )
-    cards = []
 
 
 @app.route("/")
 def index():
-    return redirect(url_for("get_cards"))
+    return send_from_directory(app.static_folder, "index.html")
 
 
-@app.route("/cards", methods=["GET"])
-def get_cards():
-    return jsonify(cards)
+@app.route("/<path:path>")
+def static_files(path):
+    return send_from_directory(app.static_folder, path)
+
+
+@app.route("/cards")
+def cards():
+    return {"ok": True}
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 10000)))

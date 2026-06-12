@@ -19,9 +19,9 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "HOST=0.0.0.0 react-scripts start",
+    "build": "react-scripts build",
     "backend": "python src/data.py",
-    "dev": "concurrently \"npm run start\" \"npm run backend\""
+    "dev": "npm run build && npm run backend"
   },
   "eslintConfig": {
     "extends": [
