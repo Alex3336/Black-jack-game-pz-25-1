@@ -1,6 +1,7 @@
-from flask import Flask, send_from_directory
+from flask import Flask, send_from_directory, jsonify
 from flask_cors import CORS
 import os
+import json
 
 app = Flask(__name__, static_folder="../build", static_url_path="")
 
@@ -12,14 +13,15 @@ def index():
     return send_from_directory(app.static_folder, "index.html")
 
 
+@app.route("/cards")
+def cards():
+    with open("src/cards.json", encoding="utf-8") as f:
+        return jsonify(json.load(f))
+
+
 @app.route("/<path:path>")
 def static_files(path):
     return send_from_directory(app.static_folder, path)
-
-
-@app.route("/cards")
-def cards():
-    return {"ok": True}
 
 
 if __name__ == "__main__":
