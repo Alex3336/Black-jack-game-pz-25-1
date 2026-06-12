@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from "react";
+import BlackJack from "./black_jack";
 
-const JOIN_URL = "/join-room";
-const CREATE_URL = "/create-room";
-const ROOM_STATUS_URL = "/room-status";
+const API_BASE = ""; 
+const JOIN_URL = `${API_BASE}/join-room`;
+const CREATE_URL = `${API_BASE}/create-room`;
+const ROOM_STATUS_URL = `${API_BASE}/room-status`;
 
 export default function JoinMenu() {
 	const [roomCode, setRoomCode] = useState("");
 	const [status, setStatus] = useState("Очікування...");
 	const [isJoined, setIsJoined] = useState(false);
+	const [gameStarted, setGameStarted] = useState(false);
 
 	useEffect(() => {
 		if (isJoined && roomCode) {
@@ -24,46 +27,67 @@ export default function JoinMenu() {
 	};
 
 	async function joinRoom() {
-		const response = await fetch(JOIN_URL, {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify({
-				room: roomCode,
-			}),
-		});
+		try {
+			const response = await fetch(JOIN_URL, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					room: roomCode,
+				}),
+			});
 
-		const data = await response.json();
-		if (data.ok) {
-			setIsJoined(true);
+			const data = await response.json();
+			if (response.ok) {
+				setIsJoined(true);
+			} else {
+				alert(data.error || "Помилка приєднання");
+			}
+		} catch (e) {
+			alert("Сервер недоступний");
 		}
 	}
 
 	async function createRoom() {
-		const response = await fetch(CREATE_URL, {
-			method: "POST",
-		});
-		const data = await response.json();
-		setRoomCode(data.room);
-		setIsJoined(true);
+		try {
+			const response = await fetch(CREATE_URL, {
+				method: "POST",
+			});
+			const data = await response.json();
+			if (response.ok) {
+				setRoomCode(data.room);
+				setIsJoined(true);
+			}
+		} catch (e) {
+			alert("Не вдалося створити кімнату");
+		}
 	}
 
 	async function checkRoomStatus() {
 		if (!roomCode) return;
 
-		const response = await fetch(ROOM_STATUS_URL, {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify({
-				room: roomCode,
-			}),
-		});
-		const data = await response.json();
-		if (data.status) {
-			setStatus(data.status);
+		try {
+			const response = await fetch(ROOM_STATUS_URL, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					room: roomCode,
+				}),
+			});
+			
+			if (!response.ok) {
+				throw new Error("Кімнату не знайдено");
+			}
+
+			const data = await response.json();
+			if (data.status) {
+				setStatus(data.status);
+			}
+		} catch (error) {
+			setStatus("Помилка зв'язку з сервером");
 		}
 	}
 
@@ -71,10 +95,15 @@ export default function JoinMenu() {
 		<div>
 			<h1>Створіть або приєднайтесь до кімнати</h1>
 
-			{isJoined ? (
+			{gameStarted ? (
+				<BlackJack />
+			) : isJoined ? (
 				<div>
 					<p>Код кімнати: {roomCode}</p>
 					<p>Статус: {status}</p>
+					{status === "Гра почалася!" && (
+						<button onClick={() => setGameStarted(true)}>Запустити гру</button>
+					)}
 				</div>
 			) : (
 				<div>

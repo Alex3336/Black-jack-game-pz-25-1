@@ -31,8 +31,21 @@ def generate_code():
 @app.route("/create-room", methods=["POST"])
 def create_room():
     code = generate_code()
-    rooms[code] = {"players": []}
+    rooms[code] = {"players": ["creator"]}
     return {"room": code}
+
+
+@app.route("/room-status", methods=["POST"])
+def room_status():
+    data = request.json
+    room = data.get("room")
+
+    if room not in rooms:
+        return {"error": "Кімнату не знайдено"}, 404
+
+    players_count = len(rooms[room]["players"])
+    status = "Гра почалася!" if players_count >= 2 else "Очікування другого гравця..."
+    return {"status": status, "players": players_count}
 
 
 @app.route("/join-room", methods=["POST"])
