@@ -30,8 +30,10 @@ def generate_code():
 
 @app.route("/create-room", methods=["POST"])
 def create_room():
+    data = request.json
+    player_name = data.get("player", "Creator")
     code = generate_code()
-    rooms[code] = {"players": ["creator"], "started": False}
+    rooms[code] = {"players": [player_name], "started": False}
     return {"room": code}
 
 
@@ -69,11 +71,36 @@ def room_status():
 def join_room():
     data = request.json
     room = data["room"]
+    player_name = data.get("player", "Player")
 
     if room not in rooms:
         return {"error": "Room not found"}, 404
-    rooms[room]["players"].append("player")
+    rooms[room]["players"].append(player_name)
     return {"ok": True, "room": room, "players": len(rooms[room]["players"])}
+
+
+@app.route("/player-cards", methods=["POST"])
+def player_cards():
+    data = request.json
+
+    room = data["room"]
+    player = data["player"]
+    cards = data["cards"]
+
+    if room not in rooms:
+        return {"error": "Room not found"}, 404
+
+    if player not in rooms[room]["players"]:
+        return {"error": "Player not found"}, 404
+
+    if "cards" not in rooms[room]:
+        rooms[room]["cards"] = {}
+
+    rooms[room]["cards"][player] = cards
+
+    host = rooms[room]["players"][0]
+
+    return {"ok": True, "host": host, "cards": rooms[room]["cards"]}
 
 
 @app.route("/<path:path>")

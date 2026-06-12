@@ -142,5 +142,9 @@
     {
         "image": "/static/playing_cards/A_spades.png",
         "name": "A_spades"
+    },
+    {
+        "image": "/static/playing_cards/card_back.png",
+        "name": "card_back"
     }
 ]

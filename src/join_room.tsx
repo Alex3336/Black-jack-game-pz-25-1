@@ -7,12 +7,17 @@ const CREATE_URL = `${API_BASE}/create-room`;
 const ROOM_STATUS_URL = `${API_BASE}/room-status`;
 const START_GAME_URL = `${API_BASE}/start-game`;
 
+export interface MyComponentProps {
+	userRole: "host" | "guest" | null;
+}
+
 export default function JoinMenu() {
 	const [roomCode, setRoomCode] = useState("");
+	const [playerName, setPlayerName] = useState("");
 	const [status, setStatus] = useState("Очікування...");
 	const [isJoined, setIsJoined] = useState(false);
 	const [gameStarted, setGameStarted] = useState(false);
-	const [userRole, setUserRole] = useState<"host" | "guest" | null>(null);
+	const [userRole, setUserRole] = useState<MyComponentProps["userRole"]>(null);
 
 	useEffect(() => {
 		if (isJoined && roomCode) {
@@ -29,6 +34,10 @@ export default function JoinMenu() {
 	};
 
 	async function joinRoom() {
+		if (!playerName.trim()) {
+			alert("Будь ласка, введіть ім'я");
+			return;
+		}
 		try {
 			const response = await fetch(JOIN_URL, {
 				method: "POST",
@@ -37,6 +46,7 @@ export default function JoinMenu() {
 				},
 				body: JSON.stringify({
 					room: roomCode,
+					player: playerName,
 				}),
 			});
 
@@ -53,9 +63,19 @@ export default function JoinMenu() {
 	}
 
 	async function createRoom() {
+		if (!playerName.trim()) {
+			alert("Будь ласка, введіть ім'я");
+			return;
+		}
 		try {
 			const response = await fetch(CREATE_URL, {
 				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					player: playerName,
+				}),
 			});
 			const data = await response.json();
 			if (response.ok) {
@@ -108,8 +128,6 @@ export default function JoinMenu() {
 					room: roomCode,
 				}),
 			});
-			// Нам не потрібно ставити setGameStarted(true) тут,
-			// бо checkRoomStatus побачить зміни на сервері і запустить гру автоматично.
 		} catch (e) {
 			alert("Не вдалося почати гру");
 		}
@@ -120,7 +138,7 @@ export default function JoinMenu() {
 			<h1>Створіть або приєднайтесь до кімнати</h1>
 
 			{gameStarted ? (
-				<BlackJack />
+				<BlackJack role={userRole} />
 			) : isJoined ? (
 				<div>
 					<p>Код кімнати: {roomCode}</p>
@@ -131,6 +149,13 @@ export default function JoinMenu() {
 				</div>
 			) : (
 				<div>
+					<input
+						type="text"
+						value={playerName}
+						onChange={(e) => setPlayerName(e.target.value)}
+						placeholder="Ваше ім'я"
+					/>
+					<br />
 					<input
 						type="text"
 						value={roomCode}
