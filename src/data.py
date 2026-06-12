@@ -13,8 +13,11 @@ if os.path.exists(json_path):
     with open(json_path, "r", encoding="utf-8") as f:
         cards = json.load(f)
 else:
-    print(f"Попередження: Файл не знайдено за шляхом {json_path}. Створюємо порожній список.")
+    print(
+        f"Попередження: Файл не знайдено за шляхом {json_path}. Створюємо порожній список."
+    )
     cards = []
+
 
 @app.route("/")
 def index():
@@ -27,5 +30,4 @@ def get_cards():
 
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host='0.0.0.0', port=port)
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
