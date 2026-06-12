@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from "react";
 import BlackJack from "./black_jack";
 
-const API_BASE = ""; 
+const API_BASE = "";
 const JOIN_URL = `${API_BASE}/join-room`;
 const CREATE_URL = `${API_BASE}/create-room`;
 const ROOM_STATUS_URL = `${API_BASE}/room-status`;
+const START_GAME_URL = `${API_BASE}/start-game`;
 
 export default function JoinMenu() {
 	const [roomCode, setRoomCode] = useState("");
 	const [status, setStatus] = useState("Очікування...");
 	const [isJoined, setIsJoined] = useState(false);
 	const [gameStarted, setGameStarted] = useState(false);
+	const [userRole, setUserRole] = useState<"host" | "guest" | null>(null);
 
 	useEffect(() => {
 		if (isJoined && roomCode) {
@@ -41,6 +43,7 @@ export default function JoinMenu() {
 			const data = await response.json();
 			if (response.ok) {
 				setIsJoined(true);
+				setUserRole("guest");
 			} else {
 				alert(data.error || "Помилка приєднання");
 			}
@@ -58,6 +61,7 @@ export default function JoinMenu() {
 			if (response.ok) {
 				setRoomCode(data.room);
 				setIsJoined(true);
+				setUserRole("host");
 			}
 		} catch (e) {
 			alert("Не вдалося створити кімнату");
@@ -77,17 +81,37 @@ export default function JoinMenu() {
 					room: roomCode,
 				}),
 			});
-			
+
 			if (!response.ok) {
 				throw new Error("Кімнату не знайдено");
 			}
 
 			const data = await response.json();
-			if (data.status) {
+			if (data.started) {
+				setGameStarted(true);
+			} else if (data.status) {
 				setStatus(data.status);
 			}
 		} catch (error) {
 			setStatus("Помилка зв'язку з сервером");
+		}
+	}
+
+	async function startGame() {
+		try {
+			await fetch(START_GAME_URL, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					room: roomCode,
+				}),
+			});
+			// Нам не потрібно ставити setGameStarted(true) тут,
+			// бо checkRoomStatus побачить зміни на сервері і запустить гру автоматично.
+		} catch (e) {
+			alert("Не вдалося почати гру");
 		}
 	}
 
@@ -101,8 +125,8 @@ export default function JoinMenu() {
 				<div>
 					<p>Код кімнати: {roomCode}</p>
 					<p>Статус: {status}</p>
-					{status === "Гра почалася!" && (
-						<button onClick={() => setGameStarted(true)}>Запустити гру</button>
+					{status === "Кімната готова" && userRole === "host" && (
+						<button onClick={startGame}>Запустити гру для всіх</button>
 					)}
 				</div>
 			) : (

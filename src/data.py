@@ -31,8 +31,18 @@ def generate_code():
 @app.route("/create-room", methods=["POST"])
 def create_room():
     code = generate_code()
-    rooms[code] = {"players": ["creator"]}
+    rooms[code] = {"players": ["creator"], "started": False}
     return {"room": code}
+
+
+@app.route("/start-game", methods=["POST"])
+def start_game():
+    data = request.json
+    room = data.get("room")
+    if room in rooms:
+        rooms[room]["started"] = True
+        return {"ok": True}
+    return {"error": "Кімнату не знайдено"}, 404
 
 
 @app.route("/room-status", methods=["POST"])
@@ -43,16 +53,23 @@ def room_status():
     if room not in rooms:
         return {"error": "Кімнату не знайдено"}, 404
 
+    host = rooms[room]["players"][0] if rooms[room]["players"] else None
     players_count = len(rooms[room]["players"])
-    status = "Гра почалася!" if players_count >= 2 else "Очікування другого гравця..."
-    return {"status": status, "players": players_count}
+    is_started = rooms[room]["started"]
+    status = "Кімната готова" if players_count >= 2 else "Очікування другого гравця..."
+    return {
+        "status": status,
+        "players": players_count,
+        "host": host,
+        "started": is_started,
+    }
 
 
 @app.route("/join-room", methods=["POST"])
 def join_room():
     data = request.json
     room = data["room"]
-    
+
     if room not in rooms:
         return {"error": "Room not found"}, 404
     rooms[room]["players"].append("player")
