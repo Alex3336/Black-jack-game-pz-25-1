@@ -1,0 +1,146 @@
+[
+    {
+        "image": "/static/playing_cards/6_clubs.png",
+        "name": "6_clubs"
+    },
+    {
+        "image": "/static/playing_cards/6_diamonds.png",
+        "name": "6_diamonds"
+    },
+    {
+        "image": "/static/playing_cards/6_hearts.png",
+        "name": "6_hearts"
+    },
+    {
+        "image": "/static/playing_cards/6_spades.png",
+        "name": "6_spades"
+    },
+    {
+        "image": "/static/playing_cards/7_clubs.png",
+        "name": "7_clubs"
+    },
+    {
+        "image": "/static/playing_cards/7_diamonds.png",
+        "name": "7_diamonds"
+    },
+    {
+        "image": "/static/playing_cards/7_hearts.png",
+        "name": "7_hearts"
+    },
+    {
+        "image": "/static/playing_cards/7_spades.png",
+        "name": "7_spades"
+    },
+    {
+        "image": "/static/playing_cards/8_clubs.png",
+        "name": "8_clubs"
+    },
+    {
+        "image": "/static/playing_cards/8_diamonds.png",
+        "name": "8_diamonds"
+    },
+    {
+        "image": "/static/playing_cards/8_hearts.png",
+        "name": "8_hearts"
+    },
+    {
+        "image": "/static/playing_cards/8_spades.png",
+        "name": "8_spades"
+    },
+    {
+        "image": "/static/playing_cards/9_clubs.png",
+        "name": "9_clubs"
+    },
+    {
+        "image": "/static/playing_cards/9_diamonds.png",
+        "name": "9_diamonds"
+    },
+    {
+        "image": "/static/playing_cards/9_hearts.png",
+        "name": "9_hearts"
+    },
+    {
+        "image": "/static/playing_cards/9_spades.png",
+        "name": "9_spades"
+    },
+    {
+        "image": "/static/playing_cards/10_clubs.png",
+        "name": "10_clubs"
+    },
+    {
+        "image": "/static/playing_cards/10_diamonds.png",
+        "name": "10_diamonds"
+    },
+    {
+        "image": "/static/playing_cards/10_hearts.png",
+        "name": "10_hearts"
+    },
+    {
+        "image": "/static/playing_cards/10_spades.png",
+        "name": "10_spades"
+    },
+    {
+        "image": "/static/playing_cards/J_clubs.png",
+        "name": "J_clubs"
+    },
+    {
+        "image": "/static/playing_cards/J_diamonds.png",
+        "name": "J_diamonds"
+    },
+    {
+        "image": "/static/playing_cards/J_hearts.png",
+        "name": "J_hearts"
+    },
+    {
+        "image": "/static/playing_cards/J_spades.png",
+        "name": "J_spades"
+    },
+    {
+        "image": "/static/playing_cards/Q_clubs.png",
+        "name": "Q_clubs"
+    },
+    {
+        "image": "/static/playing_cards/Q_diamonds.png",
+        "name": "Q_diamonds"
+    },
+    {
+        "image": "/static/playing_cards/Q_hearts.png",
+        "name": "Q_hearts"
+    },
+    {
+        "image": "/static/playing_cards/Q_spades.png",
+        "name": "Q_spades"
+    },
+    {
+        "image": "/static/playing_cards/K_clubs.png",
+        "name": "K_clubs"
+    },
+    {
+        "image": "/static/playing_cards/K_diamonds.png",
+        "name": "K_diamonds"
+    },
+    {
+        "image": "/static/playing_cards/K_hearts.png",
+        "name": "K_hearts"
+    },
+    {
+        "image": "/static/playing_cards/K_spades.png",
+        "name": "K_spades"
+    },
+    {
+        "image": "/static/playing_cards/A_clubs.png",
+        "name": "A_clubs"
+    },
+    {
+        "image": "/static/playing_cards/A_diamonds.png",
+        "name": "A_diamonds"
+    },
+    {
+        "image": "/static/playing_cards/A_hearts.png",
+        "name": "A_hearts"
+    },
+    {
+        "image": "/static/playing_cards/A_spades.png",
+        "name": "A_spades"
+    }
+]
