@@ -18,7 +18,7 @@
 		align-items: center;
 		gap: 10px;
 	}
-	&__input { // Changed selector from ID to class
+	&__input {
 		@include font-ubuntu;
 		font-size: 1.125rem;
 		color: $text-color;

@@ -142,12 +142,6 @@ export default function BlackJack({ role, roomCode, player }: BlackJackProps) {
 					<p className="game-table__dealer-info">
 						<strong>Ділер:</strong> {dealerScore} очок
 					</p>
-
-					{role === "host" && (
-						<button onClick={restartGame} className="btn-restart">
-							Зіграти ще раз
-						</button>
-					)}
 				</div>
 			)}
 
@@ -164,6 +158,11 @@ export default function BlackJack({ role, roomCode, player }: BlackJackProps) {
 					className="game-table__btn game-table__btn--stand">
 					Досить
 				</button>
+				{isGameOver && role === "host" && (
+					<button onClick={restartGame} className="game-table__btn game-table__btn--restart">
+						Зіграти ще раз
+					</button>
+				)}
 			</div>
 		</div>
 	);
