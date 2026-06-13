@@ -97,7 +97,8 @@ def room_status():
     status = (
         "Кімната готова" if len(r["players"]) >= 2 else "Очікування другого гравця..."
     )
-    current_player = r["players"][r.get("current_player_index", 0)] if r["started"] else None
+    curr_idx = r.get("current_player_index", 0)
+    current_player = r["players"][curr_idx] if r["started"] and curr_idx < len(r["players"]) else None
     return {
         "status": status,
         "players": len(r["players"]),
@@ -122,6 +123,10 @@ def game_action():
 
     r = rooms[room]
     current_idx = r.get("current_player_index", 0)
+    
+    if current_idx >= len(r["players"]):
+        return {"error": "Гра вже завершена"}, 400
+        
     current_player = r["players"][current_idx]
 
     if player_name != current_player or r["turn"] != "player":

@@ -47,17 +47,19 @@
 		color: $text-color;
 		display: flex;
 		gap: 10px;
+		justify-content: space-between;
 	}
 	&__btn {
+		width: 100px;
+		@include font-comfortaa;
+		color: $text-color;
+		border: none;
+		cursor: pointer;
 		&--hit {
-			@include font-ubuntu;
 			background-color: $loose-color;
-			color: $text-color;
 		}
 		&--stand {
-			@include font-ubuntu;
 			background-color: $win-color;
-			color: $text-color;
 		}
 	}
 }

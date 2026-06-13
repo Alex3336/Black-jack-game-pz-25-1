@@ -6,9 +6,10 @@
 	&__cards {
 		display: flex;
 		gap: 10px;
+		justify-content: center;
 	}
 	&__card-img {
-		width: 70px;
+		width: 100px;
 	}
 	&__score {
         @include font-comfortaa(300)
