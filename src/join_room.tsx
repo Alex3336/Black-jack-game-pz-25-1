@@ -153,14 +153,16 @@ export default function JoinMenu() {
 			) : (
 				<div className="join-menu__form">
 					<input
-						className="join-menu__input"
+						className="join-menu"
+						id="__input"
 						type="text"
 						value={playerName}
 						onChange={(e) => setPlayerName(e.target.value)}
 						placeholder="Ваше ім'я"
 					/>
 					<input
-						className="join-menu__input"
+						className="join-menu"
+						id="__input"
 						type="text"
 						value={roomCode}
 						onChange={handleChange}

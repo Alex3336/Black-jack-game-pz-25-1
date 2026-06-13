@@ -18,11 +18,15 @@
 		align-items: center;
 		gap: 10px;
 	}
-	&__input {
+	&#__input {
 		@include font-ubuntu;
+		font-size: 2rem;
 		color: $text-color;
 		border: none;
 		background-color: $input-color;
+		&::placeholder {
+			color: $text-color;
+		}
 	}
 	&__actions {
 		display: flex;
@@ -32,6 +36,7 @@
 		@include font-comfortaa;
 		color: $text-color;
 		border: none;
+		font-size: 2rem;
 		cursor: pointer;
 		&--start {
 			background-color: $win-color;
@@ -46,8 +51,12 @@
 	&__status {
 		@include font-ubuntu(500);
 		color: $text-color;
+		font-size: 2rem;
 	}
 	&__code {
+		@include font-ubuntu(500);
+		font-size: 2rem;
+		color: $text-color;
 		span {
 			@include font-ubuntu(700);
 			color: $text-color;
