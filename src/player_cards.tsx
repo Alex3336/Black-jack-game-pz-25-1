@@ -11,12 +11,33 @@ export interface Card {
 }
 
 interface PlayerCardsProps {
-	role: "host" | "guest";
 	hand: Card[];
-	setHand: React.Dispatch<React.SetStateAction<Card[]>>;
-	shoe: Card[];
-	setShoe: React.Dispatch<React.SetStateAction<Card[]>>;
+	hideFirstCard?: boolean;
 }
+
+/**
+ * Розраховує суму балів у руці з урахуванням логіки Туза (11 або 1).
+ */
+export const calculateHandValue = (cards: Card[]) => {
+	let total = 0;
+	let aces = 0;
+
+	cards.forEach((card) => {
+		if (Array.isArray(card.value)) {
+			total += 11;
+			aces += 1;
+		} else {
+			total += card.value as number;
+		}
+	});
+
+	while (total > 21 && aces > 0) {
+		total -= 10;
+		aces -= 1;
+	}
+
+	return total;
+};
 
 export async function getCards() {
 	const response = await fetch(`${API_URL}`, { method: "GET" });
@@ -36,38 +57,27 @@ export function createShoe(cardDeck: Card[]) {
 	return shoes;
 }
 
-export default function PlayerCards({ role, hand, setHand, shoe, setShoe }: PlayerCardsProps) {
-
-	const calculateHandValue = (cards: Card[]) => {
-		let total = 0;
-		let aces = 0;
-
-		cards.forEach((card) => {
-			if (Array.isArray(card.value)) {
-				total += 11;
-				aces += 1;
-			} else {
-				total += card.value as number;
-			}
-		});
-
-		while (total > 21 && aces > 0) {
-			total -= 10;
-			aces -= 1;
-		}
-
-		return total;
-	};
-
+export default function PlayerCards({ hand, hideFirstCard }: PlayerCardsProps) {
+	// Якщо карта прихована, рахуємо бали тільки видимих карт
+	const visibleCards = hand.filter((_, i) => !(hideFirstCard && i === 1));
+	const score = calculateHandValue(visibleCards);
 
 	return (
 		<div>
 			<div style={{ display: "flex", gap: "10px" }}>
-				{hand.map((card, i) => (
-					<img key={i} src={card.image} alt={card.name} style={{ width: "100px" }} />
-				))}
+				{hand.map((card, i) => {
+					const isHidden = hideFirstCard && i === 1;
+					return (
+						<img 
+							key={i} 
+							src={isHidden ? "/static/playing_cards/card_back.png" : card.image} 
+							alt={isHidden ? "Сорочка карти" : card.name} 
+							style={{ width: "100px" }} 
+						/>
+					);
+				})}
 			</div>
-			<p>Очки: {calculateHandValue(hand)}</p>
+			<p>Очки: {hideFirstCard ? `${score} + ?` : score}</p>
 		</div>
 	);
 }

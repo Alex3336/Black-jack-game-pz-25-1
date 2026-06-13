@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import type { MyComponentProps } from "./join_room";
-import PlayerCards, { Card, createShoe, getCards } from "./player_cards";
+import PlayerCards, { Card, createShoe, getCards, calculateHandValue } from "./player_cards";
 
 export interface BlackJackProps {
 	role: MyComponentProps["userRole"];
@@ -11,6 +11,7 @@ export default function BlackJack({ role }: BlackJackProps) {
 	const [playerHand, setPlayerHand] = useState<Card[]>([]);
 	const [dealerHand, setDealerHand] = useState<Card[]>([]);
 	const [loading, setLoading] = useState(true);
+	const [isPlayerTurn, setIsPlayerTurn] = useState(true);
 
 	useEffect(() => {
 		async function initGame() {
@@ -30,6 +31,31 @@ export default function BlackJack({ role }: BlackJackProps) {
 		initGame();
 	}, []);
 
+	const handleHit = () => {
+		if (!isPlayerTurn || shoe.length === 0) return;
+
+		const newCard = shoe[0];
+		const newShoe = shoe.slice(1);
+		const newHand = [...playerHand, newCard];
+
+		setPlayerHand(newHand);
+		setShoe(newShoe);
+
+		// Перевірка на перебір балів
+		if (calculateHandValue(newHand) > 21) {
+			setIsPlayerTurn(false);
+			alert("Перебір! Ви програли.");
+		}
+	};
+
+	const handleStand = () => {
+		setIsPlayerTurn(false);
+		alert("Хід завершено. Очікуйте результатів ділера.");
+		// Тут можна додати автоматичний хід ділера (AI)
+	};
+
+	const canPlay = role === "guest" && isPlayerTurn;
+
 	if (loading) return <div>Ініціалізація спільної колоди...</div>;
 
 	return (
@@ -41,29 +67,17 @@ export default function BlackJack({ role }: BlackJackProps) {
 
 			<div>
 				<h2>Карти Ділера</h2>
-				<PlayerCards 
-					role="host" 
-					hand={dealerHand} 
-					setHand={setDealerHand} 
-					shoe={shoe} 
-					setShoe={setShoe} 
-				/>
+				<PlayerCards hand={dealerHand} hideFirstCard={isPlayerTurn} />
 			</div>
 
 			<div>
 				<h2>Ваші карти</h2>
-				<PlayerCards 
-					role="guest" 
-					hand={playerHand} 
-					setHand={setPlayerHand} 
-					shoe={shoe} 
-					setShoe={setShoe} 
-				/>
+				<PlayerCards hand={playerHand} />
 			</div>
 
 			<div>
-				<button>Взяти карту</button>
-				<button>Досить</button>
+				<button onClick={handleHit} disabled={!canPlay}>Взяти карту</button>
+				<button onClick={handleStand} disabled={!canPlay}>Досить</button>
 			</div>
 		</div>
 	);
