@@ -15,9 +15,6 @@ interface PlayerCardsProps {
 	hideFirstCard?: boolean;
 }
 
-/**
- * Розраховує суму балів у руці з урахуванням логіки Туза (11 або 1).
- */
 export const calculateHandValue = (cards: Card[]) => {
 	let total = 0;
 	let aces = 0;
@@ -58,7 +55,6 @@ export function createShoe(cardDeck: Card[]) {
 }
 
 export default function PlayerCards({ hand, hideFirstCard }: PlayerCardsProps) {
-	// Якщо карта прихована, рахуємо бали тільки видимих карт
 	const visibleCards = hand.filter((_, i) => !(hideFirstCard && i === 1));
 	const score = calculateHandValue(visibleCards);
 
@@ -68,11 +64,13 @@ export default function PlayerCards({ hand, hideFirstCard }: PlayerCardsProps) {
 				{hand.map((card, i) => {
 					const isHidden = hideFirstCard && i === 1;
 					return (
-						<img 
-							key={i} 
-							src={isHidden ? "/static/playing_cards/card_back.png" : card.image} 
-							alt={isHidden ? "Сорочка карти" : card.name} 
-							style={{ width: "100px" }} 
+						<img
+							key={i}
+							src={
+								isHidden ? "/playing_cards/card_back.png" : card.image
+							}
+							alt={isHidden ? "Сорочка карти" : card.name}
+							style={{ width: "100px" }}
 						/>
 					);
 				})}
