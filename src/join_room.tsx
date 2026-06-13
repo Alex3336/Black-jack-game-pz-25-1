@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import BlackJack from "./black_jack";
 
-const API_BASE = "";
+const API_BASE = window.location.hostname === "localhost" ? "http://localhost:5000" : "";
 const JOIN_URL = `${API_BASE}/join-room`;
 const CREATE_URL = `${API_BASE}/create-room`;
 const ROOM_STATUS_URL = `${API_BASE}/room-status`;
