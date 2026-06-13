@@ -136,16 +136,30 @@ export default function JoinMenu() {
 
 	return (
 		<div className="join-menu">
-			<h1 className="join-menu__title">Створіть або приєднайтесь до кімнати</h1>
+			{gameStarted ? (
+				isJoined ? (
+					<h1 className="join-menu__title">
+						Запросіть друзів пограти у BJ за кодом нижче
+					</h1>
+				) : null
+			) : (
+				<h1 className="join-menu__title">
+					Створіть або приєднайтесь до кімнати
+				</h1>
+			)}
 
 			{gameStarted ? (
 				<BlackJack role={userRole} roomCode={roomCode} player={playerName} />
 			) : isJoined ? (
 				<div className="join-menu__waiting-room">
-					<p className="join-menu__code">Код кімнати: <span>{roomCode}</span></p>
+					<p className="join-menu__code">
+						Код кімнати: <span>{roomCode}</span>
+					</p>
 					<p className="join-menu__status">Статус: {status}</p>
 					{status === "Кімната готова" && userRole === "host" && (
-						<button className="join-menu__btn join-menu__btn--start" onClick={startGame}>
+						<button
+							className="join-menu__btn join-menu__btn--start"
+							onClick={startGame}>
 							Запустити гру для всіх
 						</button>
 					)}
@@ -169,8 +183,16 @@ export default function JoinMenu() {
 						placeholder="Введіть код кімнати"
 					/>
 					<div className="join-menu__actions">
-						<button className="join-menu__btn join-menu__btn--join" onClick={joinRoom}>Приєднатися</button>
-						<button className="join-menu__btn join-menu__btn--create" onClick={createRoom}>Створити кімнату</button>
+						<button
+							className="join-menu__btn join-menu__btn--join"
+							onClick={joinRoom}>
+							Приєднатися
+						</button>
+						<button
+							className="join-menu__btn join-menu__btn--create"
+							onClick={createRoom}>
+							Створити кімнату
+						</button>
 					</div>
 				</div>
 			)}

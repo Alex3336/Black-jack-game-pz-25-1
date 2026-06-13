@@ -9,8 +9,7 @@
 		@include font-ubuntu(700);
 		font-size: 2.5rem;
 		color: $text-color;
-		align-items: center;
-		gap: 10px;
+		margin-bottom: 2rem;
 	}
 	&__form {
 		display: flex;
@@ -20,10 +19,13 @@
 	}
 	&#__input {
 		@include font-ubuntu;
-		font-size: 2rem;
+		font-size: 1.125rem;
 		color: $text-color;
 		border: none;
 		background-color: $input-color;
+		padding: 12px 20px;
+		border-radius: 8px;
+		width: 300px;
 		&::placeholder {
 			color: $text-color;
 		}
@@ -33,10 +35,12 @@
 		gap: 10px;
 	}
 	&__btn {
-		@include font-comfortaa;
+		@include font-comfortaa(700);
+		font-size: 1rem;
 		color: $text-color;
 		border: none;
-		font-size: 2rem;
+		padding: 12px 24px;
+		border-radius: 8px;
 		cursor: pointer;
 		&--start {
 			background-color: $win-color;
@@ -49,17 +53,18 @@
 		}
 	}
 	&__status {
-		@include font-ubuntu(500);
+		@include font-ubuntu(400);
 		color: $text-color;
-		font-size: 2rem;
+		font-size: 1.25rem;
+		margin-top: 1rem;
 	}
 	&__code {
 		@include font-ubuntu(500);
-		font-size: 2rem;
+		font-size: 1.5rem;
 		color: $text-color;
 		span {
 			@include font-ubuntu(700);
-			color: $text-color;
+			color: lighten($secondary-color, 20%);
 		}
 	}
 }

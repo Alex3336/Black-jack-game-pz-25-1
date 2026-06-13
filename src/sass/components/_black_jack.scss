@@ -4,13 +4,18 @@
 .game-table {
 	&__title {
 		@include font-ubuntu(700);
+		font-size: 2rem;
 		color: $text-color;
+		margin-bottom: 1.5rem;
 	}
 	&__turn-indicator {
 		@include font-comfortaa(500);
+		font-size: 1.25rem;
 		color: $text-color;
+		margin-bottom: 2rem;
 	}
 	&__section {
+		font-size: 1.5rem;
 		&--dealer {
 			@include font-ubuntu;
 			color: $text-color;
@@ -20,13 +25,15 @@
 			color: $text-color;
 		}
 		&-title {
-			@include font-ubuntu;
+			@include font-ubuntu(700);
 			color: $text-color;
+			margin-bottom: 1rem;
 		}
 	}
 	&__results {
+		margin: 1.5rem 0;
 		&--win {
-			@include font-ubuntu(500);
+			@include font-ubuntu(700);
 			color: $win-color;
 		}
 		&--draw {
@@ -43,23 +50,29 @@
 		}
 	}
 	&__controls {
-		@include font-ubuntu;
-		color: $text-color;
 		display: flex;
-		gap: 10px;
-		justify-content: space-between;
+		gap: 20px;
+		justify-content: center;
+		margin-top: 2rem;
 	}
 	&__btn {
-		width: 100px;
-		@include font-comfortaa;
+		width: 140px;
+		padding: 12px;
+		border-radius: 8px;
+		@include font-comfortaa(700);
+		font-size: 1.1rem;
 		color: $text-color;
 		border: none;
 		cursor: pointer;
+		transition: transform 0.1s;
 		&--hit {
 			background-color: $loose-color;
 		}
 		&--stand {
 			background-color: $win-color;
+		}
+		&:active {
+			transform: scale(0.95);
 		}
 	}
 }
