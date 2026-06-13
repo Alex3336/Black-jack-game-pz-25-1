@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import type { BlackJackProps } from "./black_jack";
+import React from "react";
 
 const API_BASE =
 	window.location.hostname === "localhost" ? "http://localhost:5000" : "";

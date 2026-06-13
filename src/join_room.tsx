@@ -20,6 +20,35 @@ export default function JoinMenu() {
 	const [userRole, setUserRole] = useState<MyComponentProps["userRole"]>(null);
 
 	useEffect(() => {
+		async function checkRoomStatus() {
+			if (!roomCode) return;
+
+			try {
+				const response = await fetch(ROOM_STATUS_URL, {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({
+						room: roomCode,
+					}),
+				});
+
+				if (!response.ok) {
+					throw new Error("Кімнату не знайдено");
+				}
+
+				const data = await response.json();
+				if (data.started) {
+					setGameStarted(true);
+				} else if (data.status) {
+					setStatus(data.status);
+				}
+			} catch (error) {
+				setStatus("Помилка зв'язку з сервером");
+			}
+		}
+
 		if (isJoined && roomCode) {
 			const interval = setInterval(() => {
 				checkRoomStatus();
@@ -85,35 +114,6 @@ export default function JoinMenu() {
 			}
 		} catch (e) {
 			alert("Не вдалося створити кімнату");
-		}
-	}
-
-	async function checkRoomStatus() {
-		if (!roomCode) return;
-
-		try {
-			const response = await fetch(ROOM_STATUS_URL, {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({
-					room: roomCode,
-				}),
-			});
-
-			if (!response.ok) {
-				throw new Error("Кімнату не знайдено");
-			}
-
-			const data = await response.json();
-			if (data.started) {
-				setGameStarted(true);
-			} else if (data.status) {
-				setStatus(data.status);
-			}
-		} catch (error) {
-			setStatus("Помилка зв'язку з сервером");
 		}
 	}
 
