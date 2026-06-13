@@ -1,0 +1,14 @@
+@use "../util/vars" as *;
+
+@mixin font-ubuntu($weight: 400) {
+	font-family: $font-ubuntu;
+	font-weight: $weight;
+	font-style: normal;
+}
+
+@mixin font-comfortaa($weight: 400) {
+	font-family: $font-comfortaa;
+	font-optical-sizing: auto;
+	font-weight: $weight;
+	font-style: normal;
+}

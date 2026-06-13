@@ -1,0 +1,16 @@
+@use "../util/vars" as *;
+@use "../util/mixins" as *;
+
+.App{
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	background-color: $table-bg;
+	background-image: radial-gradient(circle, lighten($table-bg, 5%) 0%, $table-bg 90%);
+	color: $text-color;
+	padding: 20px;
+	box-sizing: border-box;
+	overflow-x: hidden;
+}

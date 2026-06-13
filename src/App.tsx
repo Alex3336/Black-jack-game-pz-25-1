@@ -1,5 +1,4 @@
-import React from "react";
-import "./App.css";
+import "./sass/main.scss";
 import JoinMenu from "./join_room";
 
 function App() {

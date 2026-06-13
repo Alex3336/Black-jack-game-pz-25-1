@@ -10,9 +10,10 @@ export interface BlackJackProps {
 
 interface RoomStatusResponse {
 	started: boolean;
-	player_hand: Card[];
+	hands: Record<string, Card[]>;
 	dealer_hand: Card[];
 	turn: "player" | "dealer";
+	current_player: string;
 	status: string;
 }
 
@@ -20,12 +21,14 @@ const API_BASE =
 	window.location.hostname === "localhost" ? "http://localhost:5000" : "";
 const ACTION_URL = `${API_BASE}/game-action`;
 const STATUS_URL = `${API_BASE}/room-status`;
+const START_GAME_URL = `${API_BASE}/start-game`;
 
 export default function BlackJack({ role, roomCode, player }: BlackJackProps) {
-	const [playerHand, setPlayerHand] = useState<Card[]>([]);
+	const [hands, setHands] = useState<Record<string, Card[]>>({});
 	const [dealerHand, setDealerHand] = useState<Card[]>([]);
 	const [loading, setLoading] = useState(true);
-	const [isPlayerTurn, setIsPlayerTurn] = useState(true);
+	const [currentPlayer, setCurrentPlayer] = useState("");
+	const [turnType, setTurnType] = useState<"player" | "dealer">("player");
 
 	useEffect(() => {
 		const interval = setInterval(async () => {
@@ -37,9 +40,10 @@ export default function BlackJack({ role, roomCode, player }: BlackJackProps) {
 				});
 				const data: RoomStatusResponse = await response.json();
 				if (data.started) {
-					setPlayerHand(data.player_hand);
+					setHands(data.hands);
 					setDealerHand(data.dealer_hand);
-					setIsPlayerTurn(data.turn === "player");
+					setCurrentPlayer(data.current_player);
+					setTurnType(data.turn);
 					setLoading(false);
 				}
 			} catch (e) {
@@ -55,7 +59,7 @@ export default function BlackJack({ role, roomCode, player }: BlackJackProps) {
 			await fetch(ACTION_URL, {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({ room: roomCode, action }),
+				body: JSON.stringify({ room: roomCode, action, player }),
 			});
 		} catch (e) {
 			alert("Помилка дії");
@@ -63,9 +67,10 @@ export default function BlackJack({ role, roomCode, player }: BlackJackProps) {
 	};
 
 	const handleHit = () => {
-		if (!isPlayerTurn) return;
+		if (currentPlayer !== player) return;
 		sendAction("hit");
-		if (calculateHandValue(playerHand) > 21) {
+		const myHand = hands[player] || [];
+		if (calculateHandValue(myHand) > 21) {
 			alert("Перебір!");
 		}
 	};
@@ -74,50 +79,87 @@ export default function BlackJack({ role, roomCode, player }: BlackJackProps) {
 		sendAction("stand");
 	};
 
-	const canPlay = role === "guest" && isPlayerTurn;
-	const playerScore = calculateHandValue(playerHand);
-	const dealerScore = calculateHandValue(dealerHand);
+	const restartGame = async () => {
+		try {
+			await fetch(START_GAME_URL, {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({ room: roomCode }),
+			});
+		} catch (e) {
+			alert("Не вдалося почати нову гру");
+		}
+	};
 
-	const isGameOver = !isPlayerTurn;
+	const isPlayerTurn = turnType === "player";
+	const canPlay = isPlayerTurn && currentPlayer === player;
+
+	const dealerScore = calculateHandValue(dealerHand);
+	const isGameOver = turnType === "dealer";
 
 	if (loading) return <div>Синхронізація з сервером...</div>;
 
 	return (
-		<div>
-			<h1>{player}</h1>
-			<p>
-				Ви граєте як: <strong>{role === "host" ? "Ділер" : "Гравець"}</strong>
+		<div className="game-table">
+			<h1 className="game-table__title">Кімната: {roomCode}</h1>
+			<p className="game-table__user-info">
+				Ви: <strong>{player}</strong> (
+				{role === "host" ? "Організатор" : "Гість"})
+			</p>
+			<p className="game-table__turn-indicator">
+				{isPlayerTurn ? `Зараз черга: ${currentPlayer}` : "Хід дилера..."}
 			</p>
 
-			<div>
-				<h2>Карти Ділера</h2>
+			<div className="game-table__section game-table__section--dealer">
+				<h2 className="game-table__section-title">Карти Ділера</h2>
 				<PlayerCards hand={dealerHand} hideFirstCard={isPlayerTurn} />
 			</div>
 
-			<div>
-				<h2>Ваші карти</h2>
-				<PlayerCards hand={playerHand} />
+			<div className="game-table__section game-table__section--player">
+				<h3 className="game-table__section-title">Ваші карти ({player})</h3>
+				<PlayerCards hand={hands[player] || []} />
 			</div>
 
 			{isGameOver && (
-				<div
-					style={{ margin: "20px", padding: "10px", border: "1px solid red" }}>
-					<h3>Результат:</h3>
-					{playerScore > 21
-						? "Перебір! Ви програли."
-						: dealerScore > 21
-							? "Ділер перебрав! Ви виграли!"
-							: playerScore > dealerScore
-								? "Ви виграли!"
-								: "Ділер виграв!"}
+				<div className="game-table__results">
+					<h3 className="game-table__results-title">Підсумки раунду:</h3>
+					{Object.entries(hands).map(([name, hand]) => {
+						const score = calculateHandValue(hand);
+						let result = "";
+						if (score > 21) result = "loss";
+						else if (dealerScore > 21) result = "win";
+						else if (score > dealerScore) result = "win";
+						else if (score < dealerScore) result = "loss";
+						else result = "push";
+
+						return (
+							<p key={name} className={`game-table__result-item game-table__result-item--${result}`}>
+								<strong>{name}:</strong> {score} очок — {result.toUpperCase()}
+							</p>
+						);
+					})}
+					<p className="game-table__dealer-info">
+						<strong>Ділер:</strong> {dealerScore} очок
+					</p>
+
+					{role === "host" && (
+						<button
+							onClick={restartGame}
+							className="btn-restart">
+							Зіграти ще раз
+						</button>
+					)}
 				</div>
 			)}
 
-			<div>
-				<button onClick={handleHit} disabled={!canPlay}>
+			<div className="game-table__controls">
+				<button onClick={handleHit} disabled={!canPlay} className="game-table__btn game-table__btn--hit">
 					Взяти карту
 				</button>
-				<button onClick={handleStand} disabled={!canPlay}>
+				<button
+					onClick={handleStand}
+					disabled={!canPlay}
+					className="game-table__btn game-table__btn--stand">
 					Досить
 				</button>
 			</div>

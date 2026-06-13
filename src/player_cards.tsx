@@ -59,8 +59,8 @@ export default function PlayerCards({ hand, hideFirstCard }: PlayerCardsProps) {
 	const score = calculateHandValue(visibleCards);
 
 	return (
-		<div>
-			<div style={{ display: "flex", gap: "10px" }}>
+		<div className="hand-display">
+			<div className="hand-display__cards">
 				{hand.map((card, i) => {
 					const isHidden = hideFirstCard && i === 1;
 					return (
@@ -68,12 +68,12 @@ export default function PlayerCards({ hand, hideFirstCard }: PlayerCardsProps) {
 							key={i}
 							src={isHidden ? "/playing_cards/card_back.png" : card.image}
 							alt={isHidden ? "Сорочка карти" : card.name}
-							style={{ width: "100px" }}
+							className="hand-display__card-img"
 						/>
 					);
 				})}
 			</div>
-			<p>Очки: {hideFirstCard ? `${score} + ?` : score}</p>
+			<p className="hand-display__score">Очки: {hideFirstCard ? `${score} + ?` : score}</p>
 		</div>
 	);
 }

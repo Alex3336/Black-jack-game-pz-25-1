@@ -1,0 +1,55 @@
+@use "../util/vars" as *;
+@use "../util/mixins" as *;
+
+.join-menu {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	&__title {
+		@include font-ubuntu(700);
+		color: $text-color;
+		align-items: center;
+		gap: 10px;
+	}
+	&__form {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 10px;
+	}
+	&__input {
+		@include font-ubuntu;
+		color: $text-color;
+		border: none;
+		background-color: $input-color;
+	}
+	&__actions {
+		display: flex;
+		gap: 10px;
+	}
+	&__btn {
+		@include font-comfortaa;
+		color: $text-color;
+		border: none;
+		cursor: pointer;
+		&--start {
+			background-color: $win-color;
+		}
+		&--join {
+			background-color: $input-color;
+		}
+		&--create {
+			background-color: $input-color;
+		}
+	}
+	&__status {
+		@include font-ubuntu(500);
+		color: $text-color;
+	}
+	&__code {
+		span {
+			@include font-ubuntu(700);
+			color: $text-color;
+		}
+	}
+}

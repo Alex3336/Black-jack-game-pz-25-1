@@ -12,6 +12,20 @@ CORS(app)
 
 rooms = {}
 
+def get_val(hand):
+    total = 0
+    aces = 0
+    for card in hand:
+        val = card["value"]
+        if isinstance(val, list):
+            total += 11
+            aces += 1
+        else:
+            total += val
+    while total > 21 and aces > 0:
+        total -= 10
+        aces -= 1
+    return total
 
 @app.route("/")
 def index():
@@ -58,7 +72,15 @@ def start_game():
     data = request.json
     room = data.get("room")
     if room in rooms:
-        rooms[room]["started"] = True
+        r = rooms[room]
+        r["shoe"] = init_deck()
+        r["hands"] = {}
+        for p in r["players"]:
+            r["hands"][p] = [r["shoe"].pop(0), r["shoe"].pop(0)]
+        r["dealer_hand"] = [r["shoe"].pop(0), r["shoe"].pop(0)]
+        r["current_player_index"] = 0
+        r["turn"] = "player"
+        r["started"] = True
         return {"ok": True}
     return {"error": "Кімнату не знайдено"}, 404
 
@@ -75,14 +97,16 @@ def room_status():
     status = (
         "Кімната готова" if len(r["players"]) >= 2 else "Очікування другого гравця..."
     )
+    current_player = r["players"][r.get("current_player_index", 0)] if r["started"] else None
     return {
         "status": status,
         "players": len(r["players"]),
         "host": r["players"][0] if r["players"] else None,
         "started": r["started"],
-        "player_hand": r.get("player_hand", []),
+        "hands": r.get("hands", {}),
         "dealer_hand": r.get("dealer_hand", []),
         "turn": r.get("turn", "player"),
+        "current_player": current_player
     }
 
 
@@ -91,21 +115,33 @@ def game_action():
     data = request.json
     room = data.get("room")
     action = data.get("action")
+    player_name = data.get("player")
+
     if room not in rooms:
         return {"error": "Room not found"}, 404
 
     r = rooms[room]
-    if action == "hit" and r["turn"] == "player":
-        r["player_hand"].append(r["shoe"].pop(0))
-    elif action == "stand":
-        r["turn"] = "dealer"
+    current_idx = r.get("current_player_index", 0)
+    current_player = r["players"][current_idx]
 
-        def get_val(hand):
-            v = sum([c["value"] if isinstance(c["value"], int) else 11 for c in hand])
-            return v
+    if player_name != current_player or r["turn"] != "player":
+        return {"error": "Not your turn"}, 403
 
-        while get_val(r["dealer_hand"]) < 17:
-            r["dealer_hand"].append(r["shoe"].pop(0))
+    if action == "hit":
+        r["hands"][player_name].append(r["shoe"].pop(0))
+        if get_val(r["hands"][player_name]) > 21:
+            action = "stand"
+
+    if action == "stand":
+        current_idx += 1
+        r["current_player_index"] = current_idx
+        if current_idx >= len(r["players"]):
+            r["turn"] = "dealer"
+            while get_val(r["dealer_hand"]) < 17:
+                if r["shoe"]:
+                    r["dealer_hand"].append(r["shoe"].pop(0))
+                else:
+                    break
 
     return {"ok": True}
 

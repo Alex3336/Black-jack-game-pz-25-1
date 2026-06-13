@@ -1,0 +1,10 @@
+@use "util/vars";
+@use "util/mixins";
+@use "components/join_room";
+@use "components/black_jack";
+@use "components/player_cards";
+@use "components/App";
+
+.App {
+	text-align: center;
+}

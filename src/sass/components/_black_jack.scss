@@ -1,0 +1,63 @@
+@use "../util/vars" as *;
+@use "../util/mixins" as *;
+
+.game-table {
+	&__title {
+		@include font-ubuntu(700);
+		color: $text-color;
+	}
+	&__turn-indicator {
+		@include font-comfortaa(500);
+		color: $text-color;
+	}
+	&__section {
+		&--dealer {
+			@include font-ubuntu;
+			color: $text-color;
+		}
+		&--player {
+			@include font-ubuntu;
+			color: $text-color;
+		}
+		&-title {
+			@include font-ubuntu;
+			color: $text-color;
+		}
+	}
+	&__results {
+		&--win {
+			@include font-ubuntu(500);
+			color: $win-color;
+		}
+		&--draw {
+			@include font-ubuntu(500);
+			color: $draw-color;
+		}
+		&--loss {
+			@include font-ubuntu(500);
+			color: $loose-color;
+		}
+		&--push {
+			@include font-ubuntu(500);
+			color: $text-color;
+		}
+	}
+	&__controls {
+		@include font-ubuntu;
+		color: $text-color;
+		display: flex;
+		gap: 10px;
+	}
+	&__btn {
+		&--hit {
+			@include font-ubuntu;
+			background-color: $loose-color;
+			color: $text-color;
+		}
+		&--stand {
+			@include font-ubuntu;
+			background-color: $win-color;
+			color: $text-color;
+		}
+	}
+}

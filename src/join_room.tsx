@@ -135,36 +135,41 @@ export default function JoinMenu() {
 	}
 
 	return (
-		<div>
-			<h1>Створіть або приєднайтесь до кімнати</h1>
+		<div className="join-menu">
+			<h1 className="join-menu__title">Створіть або приєднайтесь до кімнати</h1>
 
 			{gameStarted ? (
 				<BlackJack role={userRole} roomCode={roomCode} player={playerName} />
 			) : isJoined ? (
-				<div>
-					<p>Код кімнати: {roomCode}</p>
-					<p>Статус: {status}</p>
+				<div className="join-menu__waiting-room">
+					<p className="join-menu__code">Код кімнати: <span>{roomCode}</span></p>
+					<p className="join-menu__status">Статус: {status}</p>
 					{status === "Кімната готова" && userRole === "host" && (
-						<button onClick={startGame}>Запустити гру для всіх</button>
+						<button className="join-menu__btn join-menu__btn--start" onClick={startGame}>
+							Запустити гру для всіх
+						</button>
 					)}
 				</div>
 			) : (
-				<div>
+				<div className="join-menu__form">
 					<input
+						className="join-menu__input"
 						type="text"
 						value={playerName}
 						onChange={(e) => setPlayerName(e.target.value)}
 						placeholder="Ваше ім'я"
 					/>
-					<br />
 					<input
+						className="join-menu__input"
 						type="text"
 						value={roomCode}
 						onChange={handleChange}
 						placeholder="Введіть код кімнати"
 					/>
-					<button onClick={joinRoom}>Приєднатися до кімнати</button>
-					<button onClick={createRoom}>Створити кімнату</button>
+					<div className="join-menu__actions">
+						<button className="join-menu__btn join-menu__btn--join" onClick={joinRoom}>Приєднатися</button>
+						<button className="join-menu__btn join-menu__btn--create" onClick={createRoom}>Створити кімнату</button>
+					</div>
 				</div>
 			)}
 		</div>
