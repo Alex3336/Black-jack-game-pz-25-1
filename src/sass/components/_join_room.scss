@@ -10,6 +10,7 @@
 		font-size: 2.5rem;
 		color: $text-color;
 		margin-bottom: 2rem;
+		text-align: center;
 	}
 	&__form {
 		display: flex;
@@ -17,7 +18,7 @@
 		align-items: center;
 		gap: 10px;
 	}
-	&#__input {
+	&__input { // Changed selector from ID to class
 		@include font-ubuntu;
 		font-size: 1.125rem;
 		color: $text-color;
@@ -36,7 +37,7 @@
 	}
 	&__btn {
 		@include font-comfortaa(700);
-		font-size: 1rem;
+		font-size: 1.25rem;
 		color: $text-color;
 		border: none;
 		padding: 12px 24px;

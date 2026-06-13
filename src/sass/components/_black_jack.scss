@@ -4,9 +4,10 @@
 .game-table {
 	&__title {
 		@include font-ubuntu(700);
-		font-size: 2rem;
+		font-size: 2.5rem;
 		color: $text-color;
 		margin-bottom: 1.5rem;
+		text-align: center;
 	}
 	&__turn-indicator {
 		@include font-comfortaa(500);
@@ -15,7 +16,6 @@
 		margin-bottom: 2rem;
 	}
 	&__section {
-		font-size: 1.5rem;
 		&--dealer {
 			@include font-ubuntu;
 			color: $text-color;
@@ -27,27 +27,29 @@
 		&-title {
 			@include font-ubuntu(700);
 			color: $text-color;
+			font-size: 1.5rem;
 			margin-bottom: 1rem;
 		}
 	}
-	&__results {
+	&__result-item {
 		margin: 1.5rem 0;
+		font-size: 1.25rem;
+		@include font-ubuntu(500);
+
 		&--win {
-			@include font-ubuntu(700);
+			font-weight: 700;
 			color: $win-color;
 		}
-		&--draw {
-			@include font-ubuntu(500);
-			color: $draw-color;
-		}
 		&--loss {
-			@include font-ubuntu(500);
 			color: $loose-color;
 		}
 		&--push {
-			@include font-ubuntu(500);
 			color: $text-color;
 		}
+	}
+	&__dealer-info {
+		font-size: 1.25rem;
+		font-weight: 700;
 	}
 	&__controls {
 		display: flex;
@@ -60,7 +62,7 @@
 		padding: 12px;
 		border-radius: 8px;
 		@include font-comfortaa(700);
-		font-size: 1.1rem;
+		font-size: 1.25rem;
 		color: $text-color;
 		border: none;
 		cursor: pointer;

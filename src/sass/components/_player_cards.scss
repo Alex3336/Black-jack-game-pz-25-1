@@ -12,6 +12,8 @@
 		width: 100px;
 	}
 	&__score {
-        @include font-comfortaa(300)
+        @include font-ubuntu(700); // Changed to Ubuntu for consistency with other info text
+        font-size: 1.125rem; // Consistent with input text
+        margin-top: 0.5rem; // Added some spacing
 	}
 } 
