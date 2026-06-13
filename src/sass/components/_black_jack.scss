@@ -9,6 +9,12 @@
 		margin-bottom: 1.5rem;
 		text-align: center;
 	}
+	&__user-info {
+		@include font-comfortaa(500);
+		font-size: 1.25rem;
+		color: $text-color;
+		margin-bottom: 2rem;
+	}
 	&__turn-indicator {
 		@include font-comfortaa(500);
 		font-size: 1.25rem;
@@ -16,6 +22,7 @@
 		margin-bottom: 2rem;
 	}
 	&__section {
+		font-size: 1.5rem;
 		&--dealer {
 			@include font-ubuntu;
 			color: $text-color;
@@ -27,7 +34,6 @@
 		&-title {
 			@include font-ubuntu(700);
 			color: $text-color;
-			font-size: 1.5rem;
 			margin-bottom: 1rem;
 		}
 	}

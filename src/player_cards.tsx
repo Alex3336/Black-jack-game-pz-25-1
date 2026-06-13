@@ -67,7 +67,7 @@ export default function PlayerCards({ hand, hideFirstCard }: PlayerCardsProps) {
 						<img
 							key={i}
 							src={isHidden ? "/playing_cards/card_back.png" : card.image}
-							alt={isHidden ? "Сорочка карти" : card.name}
+							alt={isHidden ? "Прихована карта" : card.name}
 							className="hand-display__card-img"
 						/>
 					);

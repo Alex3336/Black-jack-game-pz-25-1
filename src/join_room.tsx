@@ -141,12 +141,12 @@ export default function JoinMenu() {
 					<h1 className="join-menu__title">
 						Запросіть друзів пограти у BJ за кодом нижче
 					</h1>
-				) : null
-			) : (
-				<h1 className="join-menu__title">
-					Створіть або приєднайтесь до кімнати
-				</h1>
-			)}
+				) : (
+					<h1 className="join-menu__title">
+						Створіть або приєднайтесь до кімнати
+					</h1>
+				)
+			) : null}
 
 			{gameStarted ? (
 				<BlackJack role={userRole} roomCode={roomCode} player={playerName} />

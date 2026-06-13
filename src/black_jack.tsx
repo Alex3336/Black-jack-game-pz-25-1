@@ -13,7 +13,7 @@ interface RoomStatusResponse {
 	hands: Record<string, Card[]>;
 	dealer_hand: Card[];
 	turn: "player" | "dealer";
-	current_player: string;
+	current_player: string | null;
 	status: string;
 }
 
@@ -27,7 +27,7 @@ export default function BlackJack({ role, roomCode, player }: BlackJackProps) {
 	const [hands, setHands] = useState<Record<string, Card[]>>({});
 	const [dealerHand, setDealerHand] = useState<Card[]>([]);
 	const [loading, setLoading] = useState(true);
-	const [currentPlayer, setCurrentPlayer] = useState("");
+	const [currentPlayer, setCurrentPlayer] = useState<string | null>("");
 	const [turnType, setTurnType] = useState<"player" | "dealer">("player");
 
 	useEffect(() => {
@@ -103,16 +103,15 @@ export default function BlackJack({ role, roomCode, player }: BlackJackProps) {
 		<div className="game-table">
 			<h1 className="game-table__title">Кімната: {roomCode}</h1>
 			<p className="game-table__user-info">
-				Ви: <strong>{player}</strong> (
-				{role === "host" ? "Організатор" : "Гість"})
+				Ви: {player} ({role === "host" ? "Організатор" : "Гість"})
 			</p>
 			<p className="game-table__turn-indicator">
 				{isPlayerTurn ? `Зараз черга: ${currentPlayer}` : "Хід дилера..."}
 			</p>
 
 			<div className="game-table__section game-table__section--dealer">
-				<h2 className="game-table__section-title">Карти Ділера</h2>
-				<PlayerCards hand={dealerHand} hideFirstCard={isPlayerTurn} />
+				<h3 className="game-table__section-title">Карти Дилера</h3>
+				<PlayerCards hand={dealerHand} hideFirstCard={turnType === "player"} />
 			</div>
 
 			<div className="game-table__section game-table__section--player">
@@ -133,7 +132,9 @@ export default function BlackJack({ role, roomCode, player }: BlackJackProps) {
 						else result = "push";
 
 						return (
-							<p key={name} className={`game-table__result-item game-table__result-item--${result}`}>
+							<p
+								key={name}
+								className={`game-table__result-item game-table__result-item--${result}`}>
 								<strong>{name}:</strong> {score} очок — {result.toUpperCase()}
 							</p>
 						);
@@ -143,9 +144,7 @@ export default function BlackJack({ role, roomCode, player }: BlackJackProps) {
 					</p>
 
 					{role === "host" && (
-						<button
-							onClick={restartGame}
-							className="btn-restart">
+						<button onClick={restartGame} className="btn-restart">
 							Зіграти ще раз
 						</button>
 					)}
@@ -153,7 +152,10 @@ export default function BlackJack({ role, roomCode, player }: BlackJackProps) {
 			)}
 
 			<div className="game-table__controls">
-				<button onClick={handleHit} disabled={!canPlay} className="game-table__btn game-table__btn--hit">
+				<button
+					onClick={handleHit}
+					disabled={!canPlay}
+					className="game-table__btn game-table__btn--hit">
 					Взяти карту
 				</button>
 				<button
