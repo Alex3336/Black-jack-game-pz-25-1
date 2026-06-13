@@ -5,6 +5,15 @@ import PlayerCards, { Card, calculateHandValue } from "./player_cards";
 export interface BlackJackProps {
 	role: MyComponentProps["userRole"];
 	roomCode: string;
+	player: string;
+}
+
+interface RoomStatusResponse {
+	started: boolean;
+	player_hand: Card[];
+	dealer_hand: Card[];
+	turn: "player" | "dealer";
+	status: string;
 }
 
 const API_BASE =
@@ -12,7 +21,7 @@ const API_BASE =
 const ACTION_URL = `${API_BASE}/game-action`;
 const STATUS_URL = `${API_BASE}/room-status`;
 
-export default function BlackJack({ role, roomCode }: BlackJackProps) {
+export default function BlackJack({ role, roomCode, player }: BlackJackProps) {
 	const [playerHand, setPlayerHand] = useState<Card[]>([]);
 	const [dealerHand, setDealerHand] = useState<Card[]>([]);
 	const [loading, setLoading] = useState(true);
@@ -26,7 +35,7 @@ export default function BlackJack({ role, roomCode }: BlackJackProps) {
 					headers: { "Content-Type": "application/json" },
 					body: JSON.stringify({ room: roomCode }),
 				});
-				const data = await response.json();
+				const data: RoomStatusResponse = await response.json();
 				if (data.started) {
 					setPlayerHand(data.player_hand);
 					setDealerHand(data.dealer_hand);
@@ -69,14 +78,13 @@ export default function BlackJack({ role, roomCode }: BlackJackProps) {
 	const playerScore = calculateHandValue(playerHand);
 	const dealerScore = calculateHandValue(dealerHand);
 
-	// Перевірка кінця гри (коли не хід гравця)
 	const isGameOver = !isPlayerTurn;
 
 	if (loading) return <div>Синхронізація з сервером...</div>;
 
 	return (
 		<div>
-			<h1>user</h1>
+			<h1>{player}</h1>
 			<p>
 				Ви граєте як: <strong>{role === "host" ? "Ділер" : "Гравець"}</strong>
 			</p>
@@ -92,11 +100,16 @@ export default function BlackJack({ role, roomCode }: BlackJackProps) {
 			</div>
 
 			{isGameOver && (
-				<div style={{ margin: "20px", padding: "10px", border: "1px solid red" }}>
+				<div
+					style={{ margin: "20px", padding: "10px", border: "1px solid red" }}>
 					<h3>Результат:</h3>
-					{playerScore > 21 ? "Перебір! Ви програли." : 
-					 dealerScore > 21 ? "Ділер перебрав! Ви виграли!" : 
-					 playerScore > dealerScore ? "Ви виграли!" : "Ділер виграв!"}
+					{playerScore > 21
+						? "Перебір! Ви програли."
+						: dealerScore > 21
+							? "Ділер перебрав! Ви виграли!"
+							: playerScore > dealerScore
+								? "Ви виграли!"
+								: "Ділер виграв!"}
 				</div>
 			)}
 

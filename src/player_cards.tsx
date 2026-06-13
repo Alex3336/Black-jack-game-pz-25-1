@@ -66,9 +66,7 @@ export default function PlayerCards({ hand, hideFirstCard }: PlayerCardsProps) {
 					return (
 						<img
 							key={i}
-							src={
-								isHidden ? "/playing_cards/card_back.png" : card.image
-							}
+							src={isHidden ? "/playing_cards/card_back.png" : card.image}
 							alt={isHidden ? "Сорочка карти" : card.name}
 							style={{ width: "100px" }}
 						/>

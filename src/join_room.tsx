@@ -139,7 +139,7 @@ export default function JoinMenu() {
 			<h1>Створіть або приєднайтесь до кімнати</h1>
 
 			{gameStarted ? (
-				<BlackJack role={userRole} roomCode={roomCode} />
+				<BlackJack role={userRole} roomCode={roomCode} player={playerName} />
 			) : isJoined ? (
 				<div>
 					<p>Код кімнати: {roomCode}</p>
