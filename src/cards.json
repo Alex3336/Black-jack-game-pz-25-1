@@ -1,166 +1,166 @@
 [
     {
-        "image": "/src/playing_cards/6_clubs.png",
+        "image": "/static/playing_cards/6_clubs.png",
         "name": "6_clubs",
         "value": 6
     },
     {
-        "image": "/src/playing_cards/6_diamonds.png",
+        "image": "/static/playing_cards/6_diamonds.png",
         "name": "6_diamonds",
         "value": 6
     },
     {
-        "image": "/src/playing_cards/6_hearts.png",
+        "image": "/static/playing_cards/6_hearts.png",
         "name": "6_hearts",
         "value": 6
     },
     {
-        "image": "/src/playing_cards/6_spades.png",
+        "image": "/static/playing_cards/6_spades.png",
         "name": "6_spades",
         "value": 6
     },
     {
-        "image": "/src/playing_cards/7_clubs.png",
+        "image": "/static/playing_cards/7_clubs.png",
         "name": "7_clubs",
         "value": 7
     },
     {
-        "image": "/src/playing_cards/7_diamonds.png",
+        "image": "/static/playing_cards/7_diamonds.png",
         "name": "7_diamonds",
         "value": 7
     },
     {
-        "image": "/src/playing_cards/7_hearts.png",
+        "image": "/static/playing_cards/7_hearts.png",
         "name": "7_hearts",
         "value": 7
     },
     {
-        "image": "/src/playing_cards/7_spades.png",
+        "image": "/static/playing_cards/7_spades.png",
         "name": "7_spades",
         "value": 7
     },
     {
-        "image": "/src/playing_cards/8_clubs.png",
+        "image": "/static/playing_cards/8_clubs.png",
         "name": "8_clubs",
         "value": 8
     },
     {
-        "image": "/src/playing_cards/8_diamonds.png",
+        "image": "/static/playing_cards/8_diamonds.png",
         "name": "8_diamonds",
         "value": 8
     },
     {
-        "image": "/src/playing_cards/8_hearts.png",
+        "image": "/static/playing_cards/8_hearts.png",
         "name": "8_hearts",
         "value": 8
     },
     {
-        "image": "/src/playing_cards/8_spades.png",
+        "image": "/static/playing_cards/8_spades.png",
         "name": "8_spades",
         "value": 8
     },
     {
-        "image": "/src/playing_cards/9_clubs.png",
+        "image": "/static/playing_cards/9_clubs.png",
         "name": "9_clubs",
         "value": 9
     },
     {
-        "image": "/src/playing_cards/9_diamonds.png",
+        "image": "/static/playing_cards/9_diamonds.png",
         "name": "9_diamonds",
         "value": 9
     },
     {
-        "image": "/src/playing_cards/9_hearts.png",
+        "image": "/static/playing_cards/9_hearts.png",
         "name": "9_hearts",
         "value": 9
     },
     {
-        "image": "/src/playing_cards/9_spades.png",
+        "image": "/static/playing_cards/9_spades.png",
         "name": "9_spades",
         "value": 9
     },
     {
-        "image": "/src/playing_cards/10_clubs.png",
+        "image": "/static/playing_cards/10_clubs.png",
         "name": "10_clubs",
         "value": 10
     },
     {
-        "image": "/src/playing_cards/10_diamonds.png",
+        "image": "/static/playing_cards/10_diamonds.png",
         "name": "10_diamonds",
         "value": 10
     },
     {
-        "image": "/src/playing_cards/10_hearts.png",
+        "image": "/static/playing_cards/10_hearts.png",
         "name": "10_hearts",
         "value": 10
     },
     {
-        "image": "/src/playing_cards/10_spades.png",
+        "image": "/static/playing_cards/10_spades.png",
         "name": "10_spades",
         "value": 10
     },
     {
-        "image": "/src/playing_cards/J_clubs.png",
+        "image": "/static/playing_cards/J_clubs.png",
         "name": "J_clubs",
         "value": 10
     },
     {
-        "image": "/src/playing_cards/J_diamonds.png",
+        "image": "/static/playing_cards/J_diamonds.png",
         "name": "J_diamonds",
         "value": 10
     },
     {
-        "image": "/src/playing_cards/J_hearts.png",
+        "image": "/static/playing_cards/J_hearts.png",
         "name": "J_hearts",
         "value": 10
     },
     {
-        "image": "/src/playing_cards/J_spades.png",
+        "image": "/static/playing_cards/J_spades.png",
         "name": "J_spades",
         "value": 10
     },
     {
-        "image": "/src/playing_cards/Q_clubs.png",
+        "image": "/static/playing_cards/Q_clubs.png",
         "name": "Q_clubs",
         "value": 10
     },
     {
-        "image": "/src/playing_cards/Q_diamonds.png",
+        "image": "/static/playing_cards/Q_diamonds.png",
         "name": "Q_diamonds",
         "value": 10
     },
     {
-        "image": "/src/playing_cards/Q_hearts.png",
+        "image": "/static/playing_cards/Q_hearts.png",
         "name": "Q_hearts",
         "value": 10
     },
     {
-        "image": "/src/playing_cards/Q_spades.png",
+        "image": "/static/playing_cards/Q_spades.png",
         "name": "Q_spades",
         "value": 10
     },
     {
-        "image": "/src/playing_cards/K_clubs.png",
+        "image": "/static/playing_cards/K_clubs.png",
         "name": "K_clubs",
         "value": 10
     },
     {
-        "image": "/src/playing_cards/K_diamonds.png",
+        "image": "/static/playing_cards/K_diamonds.png",
         "name": "K_diamonds",
         "value": 10
     },
     {
-        "image": "/src/playing_cards/K_hearts.png",
+        "image": "/static/playing_cards/K_hearts.png",
         "name": "K_hearts",
         "value": 10
     },
     {
-        "image": "/src/playing_cards/K_spades.png",
+        "image": "/static/playing_cards/K_spades.png",
         "name": "K_spades",
         "value": 10
     },
     {
-        "image": "/src/playing_cards/A_clubs.png",
+        "image": "/static/playing_cards/A_clubs.png",
         "name": "A_clubs",
         "value": [
             11,
@@ -168,7 +168,7 @@
         ]
     },
     {
-        "image": "/src/playing_cards/A_diamonds.png",
+        "image": "/static/playing_cards/A_diamonds.png",
         "name": "A_diamonds",
         "value": [
             11,
@@ -176,7 +176,7 @@
         ]
     },
     {
-        "image": "/src/playing_cards/A_hearts.png",
+        "image": "/static/playing_cards/A_hearts.png",
         "name": "A_hearts",
         "value": [
             11,
@@ -184,7 +184,7 @@
         ]
     },
     {
-        "image": "/src/playing_cards/A_spades.png",
+        "image": "/static/playing_cards/A_spades.png",
         "name": "A_spades",
         "value": [
             11,
@@ -192,7 +192,7 @@
         ]
     },
     {
-        "image": "/src/playing_cards/card_back.png",
+        "image": "/static/playing_cards/card_back.png",
         "name": "card_back",
         "value": "card_back"
     }
