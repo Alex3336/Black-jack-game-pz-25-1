@@ -53,7 +53,7 @@ export default function JoinMenu() {
 		if (isJoined && roomCode) {
 			const interval = setInterval(() => {
 				checkRoomStatus();
-			}, 5000);
+			}, 1000);
 
 			return () => clearInterval(interval);
 		}
@@ -139,7 +139,7 @@ export default function JoinMenu() {
 			<h1>Створіть або приєднайтесь до кімнати</h1>
 
 			{gameStarted ? (
-				<BlackJack role={userRole} />
+				<BlackJack role={userRole} roomCode={roomCode} />
 			) : isJoined ? (
 				<div>
 					<p>Код кімнати: {roomCode}</p>

@@ -28,12 +28,28 @@ def generate_code():
     return "".join(random.choices(string.ascii_uppercase + string.digits, k=6))
 
 
+def init_deck():
+    with open("src/cards.json", encoding="utf-8") as f:
+        data = json.load(f)
+        deck = data[:-1]
+        shoe = deck * 4
+        random.shuffle(shoe)
+        return shoe
+
+
 @app.route("/create-room", methods=["POST"])
 def create_room():
     data = request.json
     player_name = data.get("player", "Creator")
     code = generate_code()
-    rooms[code] = {"players": [player_name], "started": False}
+    rooms[code] = {
+        "players": [player_name],
+        "started": False,
+        "shoe": [],
+        "dealer_hand": [],
+        "player_hand": [],
+        "turn": "player",
+    }
     return {"room": code}
 
 
@@ -55,16 +71,43 @@ def room_status():
     if room not in rooms:
         return {"error": "Кімнату не знайдено"}, 404
 
-    host = rooms[room]["players"][0] if rooms[room]["players"] else None
-    players_count = len(rooms[room]["players"])
-    is_started = rooms[room]["started"]
-    status = "Кімната готова" if players_count >= 2 else "Очікування другого гравця..."
+    r = rooms[room]
+    status = (
+        "Кімната готова" if len(r["players"]) >= 2 else "Очікування другого гравця..."
+    )
     return {
         "status": status,
-        "players": players_count,
-        "host": host,
-        "started": is_started,
+        "players": len(r["players"]),
+        "host": r["players"][0] if r["players"] else None,
+        "started": r["started"],
+        "player_hand": r.get("player_hand", []),
+        "dealer_hand": r.get("dealer_hand", []),
+        "turn": r.get("turn", "player"),
     }
+
+
+@app.route("/game-action", methods=["POST"])
+def game_action():
+    data = request.json
+    room = data.get("room")
+    action = data.get("action")
+    if room not in rooms:
+        return {"error": "Room not found"}, 404
+
+    r = rooms[room]
+    if action == "hit" and r["turn"] == "player":
+        r["player_hand"].append(r["shoe"].pop(0))
+    elif action == "stand":
+        r["turn"] = "dealer"
+
+        def get_val(hand):
+            v = sum([c["value"] if isinstance(c["value"], int) else 11 for c in hand])
+            return v
+
+        while get_val(r["dealer_hand"]) < 17:
+            r["dealer_hand"].append(r["shoe"].pop(0))
+
+    return {"ok": True}
 
 
 @app.route("/join-room", methods=["POST"])
