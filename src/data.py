@@ -17,7 +17,16 @@ def can_split(hand):
     if len(hand) != 2:
         return False
 
-    return hand[0]["value"] == hand[1]["value"]
+    v1 = hand[0]["value"]
+    v2 = hand[1]["value"]
+
+    if isinstance(v1, list):
+        v1 = 11
+
+    if isinstance(v2, list):
+        v2 = 11
+
+    return v1 == v2
 
 
 def save_player(player_name):
@@ -311,10 +320,7 @@ def game_action():
             return {"error": "Not enough chips"}, 400
 
         r["chips"][player_name] -= bet
-        update_player_chips(
-            player_name,
-            r["chips"][player_name]
-        )
+        update_player_chips(player_name, r["chips"][player_name])
 
         card1 = hand[0]
         card2 = hand[1]

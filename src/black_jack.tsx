@@ -90,12 +90,25 @@ export default function BlackJack({ role, roomCode, player }: BlackJackProps) {
 
 	const sendAction = async (action: "hit" | "stand" | "split") => {
 		try {
-			await fetch(ACTION_URL, {
+			const response = await fetch(ACTION_URL, {
 				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({ room: roomCode, action, player }),
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					room: roomCode,
+					action,
+					player,
+				}),
 			});
-		} catch (e) {
+
+			const data = await response.json();
+
+			if (!response.ok) {
+				alert(data.error);
+				return;
+			}
+		} catch {
 			alert("Помилка дії");
 		}
 	};
@@ -328,6 +341,7 @@ export default function BlackJack({ role, roomCode, player }: BlackJackProps) {
 					onClick={() => sendAction("split")}
 					disabled={
 						!canPlay ||
+						(chips[player] ?? 0) < (bets[player] ?? 0) ||
 						Array.isArray(hands[player]?.[0]) ||
 						(hands[player] as Card[])?.length !== 2 ||
 						(hands[player] as Card[])[0]?.value !==
