@@ -7,10 +7,11 @@ export interface BlackJackProps {
 	roomCode: string;
 	player: string;
 }
+type Hand = Card[] | Card[][];
 
 interface RoomStatusResponse {
 	started: boolean;
-	hands: Record<string, Card[]>;
+	hands: Record<string, Hand>;
 	dealer_hand: Card[];
 	turn: "player" | "dealer";
 	current_player: string | null;
@@ -28,7 +29,7 @@ const PLAYER_CHIPS_URL = `${API_BASE}/player-chips`;
 const PLACE_BET_URL = `${API_BASE}/place-bet`;
 
 export default function BlackJack({ role, roomCode, player }: BlackJackProps) {
-	const [hands, setHands] = useState<Record<string, Card[]>>({});
+	const [hands, setHands] = useState<Record<string, Hand>>({});
 	const [dealerHand, setDealerHand] = useState<Card[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [currentPlayer, setCurrentPlayer] = useState<string | null>("");
@@ -87,7 +88,7 @@ export default function BlackJack({ role, roomCode, player }: BlackJackProps) {
 		loadPlayerChips();
 	}, [roomCode, player]);
 
-	const sendAction = async (action: "hit" | "stand") => {
+	const sendAction = async (action: "hit" | "stand" | "split") => {
 		try {
 			await fetch(ACTION_URL, {
 				method: "POST",
@@ -102,8 +103,12 @@ export default function BlackJack({ role, roomCode, player }: BlackJackProps) {
 	const handleHit = () => {
 		if (currentPlayer !== player) return;
 		sendAction("hit");
-		const myHand = hands[player] || [];
-		if (calculateHandValue(myHand) > 21) {
+		const myHand = hands[player];
+		if (
+			Array.isArray(myHand) &&
+			!Array.isArray(myHand[0]) &&
+			calculateHandValue(myHand as Card[]) > 21
+		) {
 			alert("Перебір!");
 		}
 	};
@@ -156,6 +161,10 @@ export default function BlackJack({ role, roomCode, player }: BlackJackProps) {
 	const playerNames = Object.keys(hands);
 	const selectedPlayerName = playerNames[selectedPlayerIndex] || player;
 	const selectedPlayerHand = hands[selectedPlayerName] || [];
+	const isSplit =
+		Array.isArray(selectedPlayerHand) &&
+		selectedPlayerHand.length > 0 &&
+		Array.isArray(selectedPlayerHand[0]);
 	const selectedPlayerHasBet = (bets[selectedPlayerName] || 0) > 0;
 	const maxBet = chips[player] || 0;
 
@@ -217,7 +226,16 @@ export default function BlackJack({ role, roomCode, player }: BlackJackProps) {
 			<div className="game-table__section game-table__section--player">
 				<h3 className="game-table__section-title">Ваші карти ({player})</h3>
 				{hasBet ? (
-					<PlayerCards hand={hands[player] || []} />
+					Array.isArray(hands[player]?.[0]) ? (
+						(hands[player] as Card[][]).map((hand, i) => (
+							<div key={i}>
+								<h4>Рука {i + 1}</h4>
+								<PlayerCards hand={hand} />
+							</div>
+						))
+					) : (
+						<PlayerCards hand={(hands[player] as Card[]) || []} />
+					)
 				) : (
 					<p className="game-table__locked-cards">
 						Карти відкриються після ставки
@@ -243,7 +261,16 @@ export default function BlackJack({ role, roomCode, player }: BlackJackProps) {
 						<span>Ставка: {bets[selectedPlayerName] ?? 0}</span>
 					</div>
 					{selectedPlayerHasBet ? (
-						<PlayerCards hand={selectedPlayerHand} />
+						isSplit ? (
+							selectedPlayerHand.map((hand, i) => (
+								<div key={i}>
+									<h4>Рука {i + 1}</h4>
+									<PlayerCards hand={hand as Card[]} />
+								</div>
+							))
+						) : (
+							<PlayerCards hand={selectedPlayerHand as Card[]} />
+						)
 					) : (
 						<p className="game-table__locked-cards">
 							Цей гравець ще не зробив ставку
@@ -256,8 +283,14 @@ export default function BlackJack({ role, roomCode, player }: BlackJackProps) {
 				<div className="game-table__results">
 					<h3 className="game-table__results-title">Підсумки раунду:</h3>
 					{Object.entries(hands).map(([name, hand]) => {
-						const score = calculateHandValue(hand);
+						const score = Array.isArray(hand?.[0])
+							? Math.max(
+									...(hand as Card[][]).map((h) => calculateHandValue(h)),
+								)
+							: calculateHandValue(hand as Card[]);
+
 						let result = "";
+
 						if (score > 21) result = "loss";
 						else if (dealerScore > 21) result = "win";
 						else if (score > dealerScore) result = "win";
@@ -290,6 +323,18 @@ export default function BlackJack({ role, roomCode, player }: BlackJackProps) {
 					disabled={!canPlay}
 					className="game-table__btn game-table__btn--stand">
 					Досить
+				</button>
+				<button
+					onClick={() => sendAction("split")}
+					disabled={
+						!canPlay ||
+						Array.isArray(hands[player]?.[0]) ||
+						(hands[player] as Card[])?.length !== 2 ||
+						(hands[player] as Card[])[0]?.value !==
+							(hands[player] as Card[])[1]?.value
+					}
+					className="game-table__btn game-table__btn--split">
+					Спліт
 				</button>
 				{isGameOver && role === "host" && (
 					<button

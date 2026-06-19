@@ -13,6 +13,13 @@ CORS(app)
 rooms = {}
 
 
+def can_split(hand):
+    if len(hand) != 2:
+        return False
+
+    return hand[0]["value"] == hand[1]["value"]
+
+
 def save_player(player_name):
     with open("src/players.json", encoding="utf-8") as f:
         players = json.load(f)
@@ -32,18 +39,26 @@ def save_player(player_name):
 
 
 def get_val(hand):
+
+    if isinstance(hand[0], list):
+        return [get_val(h) for h in hand]
+
     total = 0
     aces = 0
+
     for card in hand:
         val = card["value"]
+
         if isinstance(val, list):
             total += 11
             aces += 1
         else:
             total += val
-    while total > 21 and aces > 0:
+
+    while total > 21 and aces:
         total -= 10
         aces -= 1
+
     return total
 
 
@@ -226,13 +241,59 @@ def game_action():
     if action == "stand":
         current_idx += 1
         r["current_player_index"] = current_idx
+
         if current_idx >= len(r["players"]):
             r["turn"] = "dealer"
+
             while get_val(r["dealer_hand"]) < 17:
                 if r["shoe"]:
                     r["dealer_hand"].append(r["shoe"].pop(0))
                 else:
                     break
+
+            dealer_score = get_val(r["dealer_hand"])
+
+            for player in r["players"]:
+
+                if player not in r["bets"]:
+                    continue
+
+                bet = r["bets"][player]
+                score = get_val(r["hands"][player])
+
+                if score > 21:
+                    continue
+                elif dealer_score > 21:
+                    r["chips"][player] += bet * 2
+                elif score > dealer_score:
+                    r["chips"][player] += bet * 2
+                elif score == dealer_score:
+                    r["chips"][player] += bet
+
+    if action == "split":
+
+        hand = r["hands"][player_name]
+
+        if not can_split(hand):
+            return {"error": "Cannot split"}, 400
+
+        bet = r["bets"][player_name]
+
+        if r["chips"][player_name] < bet:
+            return {"error": "Not enough chips"}, 400
+
+        r["chips"][player_name] -= bet
+
+        card1 = hand[0]
+        card2 = hand[1]
+
+        r["hands"][player_name] = [
+            [card1, r["shoe"].pop(0)],
+            [card2, r["shoe"].pop(0)],
+        ]
+
+        r.setdefault("split_turn", {})
+        r["split_turn"][player_name] = 0
 
     return {"ok": True}
 
