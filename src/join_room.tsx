@@ -13,10 +13,18 @@ export interface MyComponentProps {
 }
 
 export default function JoinMenu() {
-	const [roomCode, setRoomCode] = useState("");
-	const [playerName, setPlayerName] = useState("");
+	const [roomCode, setRoomCode] = useState(
+		localStorage.getItem("roomCode") || "",
+	);
+
+	const [playerName, setPlayerName] = useState(
+		localStorage.getItem("playerName") || "",
+	);
+
+	const [isJoined, setIsJoined] = useState(
+		localStorage.getItem("joined") === "true",
+	);
 	const [status, setStatus] = useState("Очікування...");
-	const [isJoined, setIsJoined] = useState(false);
 	const [gameStarted, setGameStarted] = useState(false);
 	const [userRole, setUserRole] = useState<MyComponentProps["userRole"]>(null);
 
@@ -59,6 +67,20 @@ export default function JoinMenu() {
 		}
 	}, [isJoined, roomCode]);
 
+	useEffect(() => {
+		const savedRoom = localStorage.getItem("roomCode");
+
+		const savedPlayer = localStorage.getItem("playerName");
+
+		const joined = localStorage.getItem("joined");
+
+		if (savedRoom && savedPlayer && joined === "true") {
+			setRoomCode(savedRoom);
+			setPlayerName(savedPlayer);
+			setIsJoined(true);
+		}
+	}, []);
+
 	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		setRoomCode(event.target.value);
 	};
@@ -84,6 +106,10 @@ export default function JoinMenu() {
 			if (response.ok) {
 				setIsJoined(true);
 				setUserRole("guest");
+				localStorage.setItem("roomCode", roomCode);
+				localStorage.setItem("playerName", playerName);
+				localStorage.setItem("joined", "true");
+				localStorage.setItem("role", "guest");
 			} else {
 				alert(data.error || "Помилка приєднання");
 			}
