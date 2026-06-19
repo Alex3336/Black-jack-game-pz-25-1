@@ -194,7 +194,6 @@ export default function BlackJack({ role, roomCode, player }: BlackJackProps) {
 		Array.isArray(selectedPlayerHand[0]);
 	const selectedPlayerHasBet = (bets[selectedPlayerName] || 0) > 0;
 	const maxBet = chips[player] || 0;
-	const maxPlayerRange = playerNames.length - 1;
 
 	useEffect(() => {
 		if (!initialized && playerNames.length > 0) {
