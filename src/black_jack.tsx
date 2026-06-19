@@ -91,6 +91,8 @@ export default function BlackJack({ role, roomCode, player }: BlackJackProps) {
 
 	const sendAction = async (action: "hit" | "stand" | "split") => {
 		try {
+			const isMySplit = Array.isArray(hands[player]?.[0]);
+
 			const response = await fetch(ACTION_URL, {
 				method: "POST",
 				headers: {
@@ -100,6 +102,7 @@ export default function BlackJack({ role, roomCode, player }: BlackJackProps) {
 					room: roomCode,
 					action,
 					player,
+					handIndex: isMySplit ? selectedPlayerIndex : 0,
 				}),
 			});
 
@@ -116,14 +119,22 @@ export default function BlackJack({ role, roomCode, player }: BlackJackProps) {
 
 	const handleHit = () => {
 		if (currentPlayer !== player) return;
+
 		sendAction("hit");
+
 		const myHand = hands[player];
-		if (
-			Array.isArray(myHand) &&
-			!Array.isArray(myHand[0]) &&
-			calculateHandValue(myHand as Card[]) > 21
-		) {
-			alert("Перебір!");
+		
+		if (Array.isArray(myHand?.[0])) {
+			const splitHands = myHand as Card[][];
+			const currentHand = splitHands[selectedPlayerIndex] || [];
+
+			if (calculateHandValue(currentHand) > 21) {
+				alert("Перебір у цій руці!");
+			}
+		} else if (Array.isArray(myHand)) {
+			if (calculateHandValue(myHand as Card[]) > 21) {
+				alert("Перебір!");
+			}
 		}
 	};
 
