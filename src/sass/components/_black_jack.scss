@@ -1,138 +1,139 @@
-@use "../util/vars" as *;
-@use "../util/mixins" as *;
-
 .game-table {
-	&__title {
-		@include font-ubuntu(700);
-		font-size: 2.5rem;
-		color: $text-color;
-		margin-bottom: 1.5rem;
-		text-align: center;
-	}
-	&__user-info {
-		@include font-comfortaa(500);
-		font-size: 1.25rem;
-		color: $text-color;
-		margin-bottom: 2rem;
-	}
-	&__turn-indicator {
-		@include font-comfortaa(500);
-		font-size: 1.25rem;
-		color: $text-color;
-		margin-bottom: 2rem;
-	}
-	&__section {
-		font-size: 1.5rem;
-		&--dealer {
-			@include font-ubuntu;
-			color: $text-color;
-		}
-		&--player {
-			@include font-ubuntu;
-			color: $text-color;
-		}
-		&-title {
-			@include font-ubuntu(700);
-			color: $text-color;
-			margin-bottom: 1rem;
-		}
-	}
-	&__bet-panel {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		gap: 12px;
-		margin: 0 auto 2rem;
-		color: $text-color;
-		@include font-comfortaa(600);
-	}
-	&__bet-info,
-	&__bet-controls,
-	&__viewer-meta {
-		display: flex;
-		gap: 16px;
-		align-items: center;
-		justify-content: center;
-		flex-wrap: wrap;
-	}
-	&__bet-input {
-		width: 120px;
-		padding: 10px 12px;
-		border: 2px solid $text-color;
-		border-radius: 8px;
-		background-color: transparent;
-		color: $text-color;
-		@include font-comfortaa(700);
-		font-size: 1rem;
-		text-align: center;
-	}
-	&__bet-error {
-		margin: 0;
-		color: $loose-color;
-		font-size: 1rem;
-	}
-	&__player-slider {
-		width: min(100%, 420px);
-		margin: 0 0 1rem;
-		cursor: pointer;
-	}
-	&__viewer-meta {
-		margin-bottom: 1rem;
-		font-size: 1rem;
-		@include font-comfortaa(600);
-		color: $text-color;
-	}
-	&__result-item {
-		margin: 1.5rem 0;
-		font-size: 1.25rem;
-		@include font-ubuntu(500);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 16px;
+	width: 100%;
+	max-width: 900px;
+	padding: 20px;
+}
 
-		&--win {
-			font-weight: 700;
-			color: $win-color;
-		}
-		&--loss {
-			color: $loose-color;
-		}
-		&--push {
-			color: $text-color;
-		}
-	}
-	&__dealer-info {
-		font-size: 1.25rem;
-		font-weight: 700;
-	}
-	&__controls {
-		display: flex;
-		gap: 20px;
-		justify-content: center;
-		margin-top: 2rem;
-	}
-	&__btn {
-		width: 140px;
-		padding: 12px;
-		border-radius: 8px;
-		@include font-comfortaa(700);
-		font-size: 1.25rem;
-		color: $text-color;
-		border: none;
-		cursor: pointer;
-		transition: transform 0.1s;
-		&--hit {
-			background-color: $loose-color;
-		}
-		&--stand {
-			background-color: $win-color;
-		}
-		&--bet {
-			background-color: $win-color;
-		}
-		&:disabled {
-			cursor: not-allowed;
-			opacity: 0.55;
-		}
-		&:active {
-			transform: scale(0.95);
-		}
-	}
+.game-table__title {
+	font-size: 28px;
+	font-weight: bold;
+}
+
+.game-table__user-info,
+.game-table__turn-indicator {
+	font-size: 16px;
+	opacity: 0.9;
+}
+
+.game-table__bet-panel {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	background: rgba(0, 0, 0, 0.2);
+	padding: 12px;
+	border-radius: 10px;
+	width: 100%;
+}
+
+.game-table__bet-info {
+	display: flex;
+	justify-content: space-between;
+}
+
+.game-table__bet-controls {
+	display: flex;
+	gap: 10px;
+}
+
+.game-table__bet-input {
+	flex: 1;
+	padding: 6px;
+	border-radius: 6px;
+	border: none;
+}
+
+.game-table__section {
+	width: 100%;
+	padding: 12px;
+	background: rgba(255, 255, 255, 0.05);
+	border-radius: 10px;
+}
+
+.game-table__section-title {
+	margin-bottom: 8px;
+}
+
+.game-table__player-navigation {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 8px;
+}
+
+.game-table__controls {
+	display: flex;
+	gap: 10px;
+	flex-wrap: wrap;
+	justify-content: center;
+}
+
+.game-table__btn {
+	padding: 8px 14px;
+	border: none;
+	border-radius: 8px;
+	cursor: pointer;
+	background: #2c3e50;
+	color: white;
+	transition: 0.2s;
+}
+
+.game-table__btn:hover {
+	background: #34495e;
+}
+
+.game-table__btn:disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+}
+
+.game-table__btn--hit {
+	background: #27ae60;
+}
+
+.game-table__btn--stand {
+	background: #e67e22;
+}
+
+.game-table__btn--split {
+	background: #8e44ad;
+}
+
+.game-table__btn--bet {
+	background: #2980b9;
+}
+
+.game-table__btn--restart {
+	background: #c0392b;
+}
+
+.game-table__results {
+	width: 100%;
+	background: rgba(0, 0, 0, 0.3);
+	padding: 12px;
+	border-radius: 10px;
+}
+
+.game-table__result-item--win {
+	color: #2ecc71;
+}
+
+.game-table__result-item--loss {
+	color: #e74c3c;
+}
+
+.game-table__result-item--push {
+	color: #f1c40f;
+}
+
+.game-table__dealer-info {
+	margin-top: 8px;
+}
+
+.game-table__locked-cards {
+	opacity: 0.6;
+	font-style: italic;
 }

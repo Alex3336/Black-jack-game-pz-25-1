@@ -78,6 +78,13 @@ export default function JoinMenu() {
 			setRoomCode(savedRoom);
 			setPlayerName(savedPlayer);
 			setIsJoined(true);
+
+			const savedRole = localStorage.getItem(
+				"role",
+			) as MyComponentProps["userRole"];
+			if (savedRole) {
+				setUserRole(savedRole);
+			}
 		}
 	}, []);
 
@@ -138,6 +145,11 @@ export default function JoinMenu() {
 				setRoomCode(data.room);
 				setIsJoined(true);
 				setUserRole("host");
+
+				localStorage.setItem("roomCode", data.room);
+				localStorage.setItem("playerName", playerName);
+				localStorage.setItem("joined", "true");
+				localStorage.setItem("role", "host");
 			}
 		} catch (e) {
 			alert("Не вдалося створити кімнату");

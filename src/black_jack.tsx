@@ -32,13 +32,14 @@ export default function BlackJack({ role, roomCode, player }: BlackJackProps) {
 	const [hands, setHands] = useState<Record<string, Hand>>({});
 	const [dealerHand, setDealerHand] = useState<Card[]>([]);
 	const [loading, setLoading] = useState(true);
-	const [currentPlayer, setCurrentPlayer] = useState<string | null>("");
+	const [currentPlayer, setCurrentPlayer] = useState<string | null>(null);
 	const [turnType, setTurnType] = useState<"player" | "dealer">("player");
 	const [chips, setChips] = useState<Record<string, number>>({});
 	const [bets, setBets] = useState<Record<string, number>>({});
 	const [betAmount, setBetAmount] = useState(50);
 	const [betError, setBetError] = useState("");
 	const [selectedPlayerIndex, setSelectedPlayerIndex] = useState(0);
+	const [initialized, setInitialized] = useState(false);
 
 	useEffect(() => {
 		const interval = setInterval(async () => {
@@ -127,6 +128,7 @@ export default function BlackJack({ role, roomCode, player }: BlackJackProps) {
 	};
 
 	const handleStand = () => {
+		if (currentPlayer !== player) return;
 		sendAction("stand");
 	};
 
@@ -165,6 +167,18 @@ export default function BlackJack({ role, roomCode, player }: BlackJackProps) {
 		}
 	};
 
+	const prevPlayer = () => {
+		setSelectedPlayerIndex((current) =>
+			current === 0 ? playerNames.length - 1 : current - 1,
+		);
+	};
+
+	const nextPlayer = () => {
+		setSelectedPlayerIndex((current) =>
+			current === playerNames.length - 1 ? 0 : current + 1,
+		);
+	};
+
 	const isPlayerTurn = turnType === "player";
 	const hasBet = (bets[player] || 0) > 0;
 	const canPlay = isPlayerTurn && currentPlayer === player && hasBet;
@@ -180,6 +194,15 @@ export default function BlackJack({ role, roomCode, player }: BlackJackProps) {
 		Array.isArray(selectedPlayerHand[0]);
 	const selectedPlayerHasBet = (bets[selectedPlayerName] || 0) > 0;
 	const maxBet = chips[player] || 0;
+	const maxPlayerRange = playerNames.length - 1;
+
+	useEffect(() => {
+		if (!initialized && playerNames.length > 0) {
+			const myIndex = playerNames.indexOf(player);
+			setSelectedPlayerIndex(Math.max(0, myIndex));
+			setInitialized(true);
+		}
+	}, [playerNames, initialized, player]);
 
 	if (loading) return <div>Синхронізація з сервером...</div>;
 
@@ -226,7 +249,7 @@ export default function BlackJack({ role, roomCode, player }: BlackJackProps) {
 
 			<div className="game-table__section game-table__section--dealer">
 				<h3 className="game-table__section-title">Карти Дилера</h3>
-				{hasBet ? (
+				{selectedPlayerHasBet ? (
 					<PlayerCards
 						hand={dealerHand}
 						hideFirstCard={turnType === "player"}
@@ -236,44 +259,23 @@ export default function BlackJack({ role, roomCode, player }: BlackJackProps) {
 				)}
 			</div>
 
-			<div className="game-table__section game-table__section--player">
-				<h3 className="game-table__section-title">Ваші карти ({player})</h3>
-				{hasBet ? (
-					Array.isArray(hands[player]?.[0]) ? (
-						(hands[player] as Card[][]).map((hand, i) => (
-							<div key={i}>
-								<h4>Рука {i + 1}</h4>
-								<PlayerCards hand={hand} />
-							</div>
-						))
-					) : (
-						<PlayerCards hand={(hands[player] as Card[]) || []} />
-					)
-				) : (
-					<p className="game-table__locked-cards">
-						Карти відкриються після ставки
-					</p>
-				)}
-			</div>
-
 			{playerNames.length > 1 && (
 				<div className="game-table__section game-table__section--viewer">
-					<h3 className="game-table__section-title">
-						Карти гравця: {selectedPlayerName}
-					</h3>
-					<input
-						className="game-table__player-slider"
-						type="range"
-						min={0}
-						max={playerNames.length - 1}
-						value={selectedPlayerIndex}
-						onChange={(e) => setSelectedPlayerIndex(Number(e.target.value))}
-					/>
-					<div className="game-table__viewer-meta">
-						<span>Фішки: {chips[selectedPlayerName] ?? 0}</span>
-						<span>Ставка: {bets[selectedPlayerName] ?? 0}</span>
+					<h3 className="game-table__section-title">Карти гравця</h3>
+					<div className="game-table__player-navigation">
+						<button onClick={prevPlayer} className="game-table__btn">
+							←
+						</button>
+						<span>
+							{selectedPlayerName === player
+								? `${selectedPlayerName}(Ваші карти)`
+								: selectedPlayerName}
+						</span>
+						<button onClick={nextPlayer} className="game-table__btn">
+							→
+						</button>
 					</div>
-					{selectedPlayerHasBet ? (
+					{hasBet ? (
 						isSplit ? (
 							selectedPlayerHand.map((hand, i) => (
 								<div key={i}>

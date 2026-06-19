@@ -55,17 +55,17 @@ export function createShoe(cardDeck: Card[]) {
 }
 
 export default function PlayerCards({ hand, hideFirstCard }: PlayerCardsProps) {
-	const visibleCards = hand.filter((_, i) => !(hideFirstCard && i === 1));
+	const visibleCards = hand.filter((_, i) => !(hideFirstCard && i === 0));
 	const score = calculateHandValue(visibleCards);
 
 	return (
 		<div className="hand-display">
 			<div className="hand-display__cards">
 				{hand.map((card, i) => {
-					const isHidden = hideFirstCard && i === 1;
+					const isHidden = hideFirstCard && i === 0;
 					return (
 						<img
-							key={i}
+							key={`${card.name}-${i}`}
 							src={isHidden ? "/playing_cards/card_back.png" : card.image}
 							alt={isHidden ? "Прихована карта" : card.name}
 							className="hand-display__card-img"
@@ -73,7 +73,9 @@ export default function PlayerCards({ hand, hideFirstCard }: PlayerCardsProps) {
 					);
 				})}
 			</div>
-			<p className="hand-display__score">Очки: {hideFirstCard ? `${score} + ?` : score}</p>
+			<p className="hand-display__score">
+				Очки: {hideFirstCard ? `${score} + ?` : score}
+			</p>
 		</div>
 	);
 }
