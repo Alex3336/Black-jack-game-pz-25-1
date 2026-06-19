@@ -263,40 +263,38 @@ export default function BlackJack({ role, roomCode, player }: BlackJackProps) {
 				)}
 			</div>
 
-			{playerNames.length > 1 && (
-				<div className="game-table__section game-table__section--viewer">
-					<h3 className="game-table__section-title">Карти гравця</h3>
-					<div className="game-table__player-navigation">
-						<button onClick={prevPlayer} className="game-table__btn">
-							←
-						</button>
-						<span>
-							{selectedPlayerName === player
-								? `${selectedPlayerName}(Ваші карти)`
-								: selectedPlayerName}
-						</span>
-						<button onClick={nextPlayer} className="game-table__btn">
-							→
-						</button>
-					</div>
-					{hasBet ? (
-						isSplit ? (
-							selectedPlayerHand.map((hand, i) => (
-								<div key={i}>
-									<h4>Рука {i + 1}</h4>
-									<PlayerCards hand={hand as Card[]} />
-								</div>
-							))
-						) : (
-							<PlayerCards hand={selectedPlayerHand as Card[]} />
-						)
-					) : (
-						<p className="game-table__locked-cards">
-							Цей гравець ще не зробив ставку
-						</p>
-					)}
+			<div className="game-table__section game-table__section--viewer">
+				<h3 className="game-table__section-title">Карти гравця</h3>
+				<div className="game-table__player-navigation">
+					<button onClick={prevPlayer} className="game-table__btn">
+						←
+					</button>
+					<span>
+						{selectedPlayerName === player
+							? `${selectedPlayerName}(Ваші карти)`
+							: selectedPlayerName}
+					</span>
+					<button onClick={nextPlayer} className="game-table__btn">
+						→
+					</button>
 				</div>
-			)}
+				{selectedPlayerHasBet ? (
+					isSplit ? (
+						selectedPlayerHand.map((hand, i) => (
+							<div key={i}>
+								<h4>Рука {i + 1}</h4>
+								<PlayerCards hand={hand as Card[]} />
+							</div>
+						))
+					) : (
+						<PlayerCards hand={selectedPlayerHand as Card[]} />
+					)
+				) : (
+					<p className="game-table__locked-cards">
+						Цей гравець ще не зробив ставку
+					</p>
+				)}
+			</div>
 
 			{isGameOver && (
 				<div className="game-table__results">

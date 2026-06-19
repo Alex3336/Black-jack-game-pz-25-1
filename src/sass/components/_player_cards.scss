@@ -3,6 +3,9 @@
 
 
 .hand-display {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 	&__cards {
 		display: flex;
 		gap: 10px;
@@ -10,6 +13,8 @@
 	}
 	&__card-img {
 		width: 100px;
+		height: auto;
+		display: block;
 	}
 	&__score {
         @include font-ubuntu(700);
