@@ -8,10 +8,6 @@ from flask import request
 
 app = Flask(__name__, static_folder="../build", static_url_path="")
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-PLAYERS_PATH = os.path.join(BASE_DIR, "src", "players.json")
-CARDS_PATH = os.path.join(BASE_DIR, "src", "cards.json")
-
 CORS(app)
 
 rooms = {}
@@ -34,7 +30,7 @@ def can_split(hand):
 
 
 def save_player(player_name):
-    with open(PLAYERS_PATH, encoding="utf-8") as f:
+    with open("src/players.json", encoding="utf-8") as f:
         players = json.load(f)
 
     for player in players:
@@ -45,7 +41,7 @@ def save_player(player_name):
 
     players.append(new_player)
 
-    with open(PLAYERS_PATH, "w", encoding="utf-8") as f:
+    with open("src/players.json", "w", encoding="utf-8") as f:
         json.dump(players, f, ensure_ascii=False, indent=4)
 
     return new_player
@@ -53,7 +49,7 @@ def save_player(player_name):
 
 def update_player_chips(player_name, chips):
 
-    with open(PLAYERS_PATH, encoding="utf-8") as f:
+    with open("src/players.json", encoding="utf-8") as f:
         players = json.load(f)
 
     for player in players:
@@ -61,7 +57,7 @@ def update_player_chips(player_name, chips):
             player["chips"] = chips
             break
 
-    with open(PLAYERS_PATH, "w", encoding="utf-8") as f:
+    with open("src/players.json", "w", encoding="utf-8") as f:
         json.dump(players, f, ensure_ascii=False, indent=4)
 
 
@@ -96,7 +92,7 @@ def index():
 
 @app.route("/cards")
 def cards():
-    with open(CARDS_PATH, encoding="utf-8") as f:
+    with open("src/cards.json", encoding="utf-8") as f:
         return jsonify(json.load(f))
 
 
@@ -105,7 +101,7 @@ def generate_code():
 
 
 def init_deck():
-    with open(CARDS_PATH, encoding="utf-8") as f:
+    with open("src/cards.json", encoding="utf-8") as f:
         data = json.load(f)
         deck = data[:-1]
         shoe = deck * 4
