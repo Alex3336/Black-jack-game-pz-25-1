@@ -144,6 +144,11 @@ export default function BlackJack({ role, roomCode, player }: BlackJackProps) {
 		}
 	};
 
+	const leaveRoom = () => {
+		localStorage.clear();
+		window.location.reload();
+	};
+
 	const placeBet = async () => {
 		setBetError("");
 
@@ -358,6 +363,11 @@ export default function BlackJack({ role, roomCode, player }: BlackJackProps) {
 						Зіграти ще раз
 					</button>
 				)}
+				<button
+					onClick={leaveRoom}
+					className="game-table__btn game-table__btn--leave">
+					Вийти
+				</button>
 			</div>
 		</div>
 	);

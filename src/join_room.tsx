@@ -172,6 +172,11 @@ export default function JoinMenu() {
 		}
 	}
 
+	const leaveRoom = () => {
+		localStorage.clear();
+		window.location.reload();
+	};
+
 	return (
 		<div className="join-menu">
 			{gameStarted ? (
@@ -201,6 +206,11 @@ export default function JoinMenu() {
 							Запустити гру для всіх
 						</button>
 					)}
+					<button
+						className="join-menu__btn join-menu__btn--leave"
+						onClick={leaveRoom}>
+						Вийти з кімнати
+					</button>
 				</div>
 			) : (
 				<div className="join-menu__form">
