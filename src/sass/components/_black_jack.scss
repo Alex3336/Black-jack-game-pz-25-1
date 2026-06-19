@@ -37,6 +37,51 @@
 			margin-bottom: 1rem;
 		}
 	}
+	&__bet-panel {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 12px;
+		margin: 0 auto 2rem;
+		color: $text-color;
+		@include font-comfortaa(600);
+	}
+	&__bet-info,
+	&__bet-controls,
+	&__viewer-meta {
+		display: flex;
+		gap: 16px;
+		align-items: center;
+		justify-content: center;
+		flex-wrap: wrap;
+	}
+	&__bet-input {
+		width: 120px;
+		padding: 10px 12px;
+		border: 2px solid $text-color;
+		border-radius: 8px;
+		background-color: transparent;
+		color: $text-color;
+		@include font-comfortaa(700);
+		font-size: 1rem;
+		text-align: center;
+	}
+	&__bet-error {
+		margin: 0;
+		color: $loose-color;
+		font-size: 1rem;
+	}
+	&__player-slider {
+		width: min(100%, 420px);
+		margin: 0 0 1rem;
+		cursor: pointer;
+	}
+	&__viewer-meta {
+		margin-bottom: 1rem;
+		font-size: 1rem;
+		@include font-comfortaa(600);
+		color: $text-color;
+	}
 	&__result-item {
 		margin: 1.5rem 0;
 		font-size: 1.25rem;
@@ -78,6 +123,13 @@
 		}
 		&--stand {
 			background-color: $win-color;
+		}
+		&--bet {
+			background-color: $win-color;
+		}
+		&:disabled {
+			cursor: not-allowed;
+			opacity: 0.55;
 		}
 		&:active {
 			transform: scale(0.95);
