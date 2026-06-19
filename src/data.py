@@ -180,6 +180,31 @@ def room_status():
     }
 
 
+@app.route("/leave-room", methods=["POST"])
+def leave_room():
+    data = request.json
+    room = data.get("room")
+    player = data.get("player")
+
+    if room not in rooms:
+        return {"error": "Room not found"}, 404
+
+    r = rooms[room]
+
+    if player in r["players"]:
+        r["players"].remove(player)
+
+    r["chips"].pop(player, None)
+    r["bets"].pop(player, None)
+    r.get("hands", {}).pop(player, None)
+
+    if not r["players"]:
+        del rooms[room]
+        return {"ok": True, "deleted": True}
+
+    return {"ok": True, "host": r["players"][0]}
+
+
 @app.route("/player-chips", methods=["POST"])
 def player_chips():
     data = request.json
@@ -261,21 +286,16 @@ def game_action():
     if action == "hit":
         player_hands = r["hands"][player_name]
 
-        # Check if this player has split hands (array of arrays)
         if player_hands and isinstance(player_hands[0], list):
             split_idx = r.get("split_turn", {}).get(player_name, 0)
             if split_idx >= len(player_hands):
                 return {"error": "All split hands played"}, 400
 
-            # Add card to the current split sub-hand
             player_hands[split_idx].append(r["shoe"].pop(0))
 
-            # Check if this specific split hand busted
             if get_val(player_hands[split_idx]) > 21:
-                # Auto-advance to next split hand
                 r["split_turn"][player_name] = split_idx + 1
 
-                # If all split hands played, advance to next player via stand
                 if r["split_turn"][player_name] >= len(player_hands):
                     action = "stand"
                 else:
@@ -290,16 +310,13 @@ def game_action():
     if action == "stand":
         player_hands = r["hands"].get(player_name, [])
 
-        # Check if this player has split hands
         if player_hands and isinstance(player_hands[0], list):
             split_idx = r.get("split_turn", {}).get(player_name, 0) + 1
             r["split_turn"][player_name] = split_idx
 
-            # If there are still more split hands to play, stay on same player
             if split_idx < len(player_hands):
                 return {"ok": True}
 
-        # Advance to next player (no split, or all split hands played)
         current_idx += 1
         r["current_player_index"] = current_idx
 

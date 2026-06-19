@@ -7,6 +7,7 @@ const JOIN_URL = `${API_BASE}/join-room`;
 const CREATE_URL = `${API_BASE}/create-room`;
 const ROOM_STATUS_URL = `${API_BASE}/room-status`;
 const START_GAME_URL = `${API_BASE}/start-game`;
+const LEAVE_ROOM_URL = `${API_BASE}/leave-room`;
 
 export interface MyComponentProps {
 	userRole: "host" | "guest" | null;
@@ -52,6 +53,10 @@ export default function JoinMenu() {
 					setGameStarted(true);
 				} else if (data.status) {
 					setStatus(data.status);
+				}
+				if (data.host === playerName && userRole !== "host") {
+					setUserRole("host");
+					localStorage.setItem("role", "host");
 				}
 			} catch (error) {
 				setStatus("Помилка зв'язку з сервером");
@@ -172,7 +177,16 @@ export default function JoinMenu() {
 		}
 	}
 
-	const leaveRoom = () => {
+	const leaveRoom = async () => {
+		try {
+			await fetch(LEAVE_ROOM_URL, {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({ room: roomCode, player: playerName }),
+			});
+		} catch (e) {
+			
+		}
 		localStorage.clear();
 		window.location.reload();
 	};

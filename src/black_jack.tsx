@@ -25,6 +25,7 @@ const API_BASE =
 const ACTION_URL = `${API_BASE}/game-action`;
 const STATUS_URL = `${API_BASE}/room-status`;
 const START_GAME_URL = `${API_BASE}/start-game`;
+const LEAVE_ROOM_URL = `${API_BASE}/leave-room`;
 const PLAYER_CHIPS_URL = `${API_BASE}/player-chips`;
 const PLACE_BET_URL = `${API_BASE}/place-bet`;
 
@@ -123,7 +124,7 @@ export default function BlackJack({ role, roomCode, player }: BlackJackProps) {
 		sendAction("hit");
 
 		const myHand = hands[player];
-		
+
 		if (Array.isArray(myHand?.[0])) {
 			const splitHands = myHand as Card[][];
 			const currentHand = splitHands[selectedPlayerIndex] || [];
@@ -155,7 +156,16 @@ export default function BlackJack({ role, roomCode, player }: BlackJackProps) {
 		}
 	};
 
-	const leaveRoom = () => {
+	const leaveRoom = async () => {
+		try {
+			await fetch(LEAVE_ROOM_URL, {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({ room: roomCode, player }),
+			});
+		} catch (e) {
+			
+		}
 		localStorage.clear();
 		window.location.reload();
 	};
