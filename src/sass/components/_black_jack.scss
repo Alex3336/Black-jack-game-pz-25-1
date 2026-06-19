@@ -1,3 +1,5 @@
+@use "../util/vars" as *;
+
 .game-table {
 	display: flex;
 	flex-direction: column;
@@ -19,7 +21,7 @@
 		display: flex;
 		flex-direction: column;
 		gap: 10px;
-		background: rgba(0, 0, 0, 0.2);
+		background: $panel-dark;
 		padding: 12px;
 		border-radius: 10px;
 		width: 100%;
@@ -41,7 +43,7 @@
 	&__section {
 		width: 100%;
 		padding: 12px;
-		background: rgba(255, 255, 255, 0.05);
+		background: $panel-light;
 		border-radius: 10px;
 	}
 	&__section-title {
@@ -61,19 +63,19 @@
 	}
 	&__results {
 		width: 100%;
-		background: rgba(0, 0, 0, 0.3);
+		background: $panel-strong;
 		padding: 12px;
 		border-radius: 10px;
 	}
 	&__result-item {
 		&--win {
-			color: #2ecc71;
+			color: $win-color;
 		}
 		&--loss {
-			color: #e74c3c;
+			color: $loose-color;
 		}
 		&--push {
-			color: #f1c40f;
+			color: $draw-color;
 		}
 	}
 	&__dealer-info {
@@ -88,30 +90,33 @@
 		border: none;
 		border-radius: 8px;
 		cursor: pointer;
-		background: #2c3e50;
-		color: white;
+		background: $btn-primary;
+		color: $text-color;
 		transition: 0.2s;
 		&:disabled {
-			opacity: 0.5;
+			opacity: $disabled-opacity;
 			cursor: not-allowed;
 		}
 		&:hover {
-			background: #34495e;
+			background: $btn-primary-hover;
 		}
 		&--stand {
-			background: #e67e22;
+			background: $btn-stand;
 		}
 		&--hit {
-			background: #27ae60;
+			background: $btn-hit;
 		}
 		&--split {
-			background: #8e44ad;
+			background: $btn-split;
 		}
 		&--bet {
-			background: #2980b9;
+			background: $btn-bet;
 		}
 		&--restart {
-			background: #c0392b;
+			background: $btn-restart;
+		}
+		&--leave {
+			background: $btn-restart;
 		}
 	}
 }

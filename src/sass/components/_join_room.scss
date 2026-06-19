@@ -52,6 +52,9 @@
 		&--create {
 			background-color: $input-color;
 		}
+		&--leave {
+			background-color: $loose-color;
+		}
 	}
 	&__status {
 		@include font-ubuntu(400);
