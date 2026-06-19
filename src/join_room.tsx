@@ -70,7 +70,7 @@ export default function JoinMenu() {
 
 			return () => clearInterval(interval);
 		}
-	}, [isJoined, roomCode]);
+	}, [isJoined, roomCode, playerName, userRole]);
 
 	useEffect(() => {
 		const savedRoom = localStorage.getItem("roomCode");
