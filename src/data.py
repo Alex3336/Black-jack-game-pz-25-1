@@ -107,6 +107,7 @@ def start_game():
         r["current_player_index"] = 0
         r["turn"] = "player"
         r["started"] = True
+        r["bets"] = {}
         return {"ok": True}
     return {"error": "Кімнату не знайдено"}, 404
 
@@ -175,6 +176,9 @@ def place_bet():
 
     if player not in r["players"]:
         return {"error": "Player not found"}, 404
+
+    if r["bets"].get(player, 0) > 0:
+        return {"error": "Bet already placed"}, 400
 
     if bet <= 0:
         return {"error": "Bet must be positive"}, 400

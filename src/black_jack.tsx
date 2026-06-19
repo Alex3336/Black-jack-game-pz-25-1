@@ -156,7 +156,8 @@ export default function BlackJack({ role, roomCode, player }: BlackJackProps) {
 	const playerNames = Object.keys(hands);
 	const selectedPlayerName = playerNames[selectedPlayerIndex] || player;
 	const selectedPlayerHand = hands[selectedPlayerName] || [];
-	const maxBet = Math.max(chips[player] || 0, 1);
+	const selectedPlayerHasBet = (bets[selectedPlayerName] || 0) > 0;
+	const maxBet = chips[player] || 0;
 
 	if (loading) return <div>Синхронізація з сервером...</div>;
 
@@ -187,7 +188,13 @@ export default function BlackJack({ role, roomCode, player }: BlackJackProps) {
 					/>
 					<button
 						onClick={placeBet}
-						disabled={isGameOver || hasBet || betAmount <= 0 || betAmount > maxBet}
+						disabled={
+							isGameOver ||
+							hasBet ||
+							maxBet <= 0 ||
+							betAmount <= 0 ||
+							betAmount > maxBet
+						}
 						className="game-table__btn game-table__btn--bet">
 						Поставити
 					</button>
@@ -197,12 +204,25 @@ export default function BlackJack({ role, roomCode, player }: BlackJackProps) {
 
 			<div className="game-table__section game-table__section--dealer">
 				<h3 className="game-table__section-title">Карти Дилера</h3>
-				<PlayerCards hand={dealerHand} hideFirstCard={turnType === "player"} />
+				{hasBet ? (
+					<PlayerCards
+						hand={dealerHand}
+						hideFirstCard={turnType === "player"}
+					/>
+				) : (
+					<p className="game-table__locked-cards">Спочатку зробіть ставку</p>
+				)}
 			</div>
 
 			<div className="game-table__section game-table__section--player">
 				<h3 className="game-table__section-title">Ваші карти ({player})</h3>
-				<PlayerCards hand={hands[player] || []} />
+				{hasBet ? (
+					<PlayerCards hand={hands[player] || []} />
+				) : (
+					<p className="game-table__locked-cards">
+						Карти відкриються після ставки
+					</p>
+				)}
 			</div>
 
 			{playerNames.length > 1 && (
@@ -222,7 +242,13 @@ export default function BlackJack({ role, roomCode, player }: BlackJackProps) {
 						<span>Фішки: {chips[selectedPlayerName] ?? 0}</span>
 						<span>Ставка: {bets[selectedPlayerName] ?? 0}</span>
 					</div>
-					<PlayerCards hand={selectedPlayerHand} />
+					{selectedPlayerHasBet ? (
+						<PlayerCards hand={selectedPlayerHand} />
+					) : (
+						<p className="game-table__locked-cards">
+							Цей гравець ще не зробив ставку
+						</p>
+					)}
 				</div>
 			)}
 
