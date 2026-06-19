@@ -38,6 +38,20 @@ def save_player(player_name):
     return new_player
 
 
+def update_player_chips(player_name, chips):
+
+    with open("src/players.json", encoding="utf-8") as f:
+        players = json.load(f)
+
+    for player in players:
+        if player["name"] == player_name:
+            player["chips"] = chips
+            break
+
+    with open("src/players.json", "w", encoding="utf-8") as f:
+        json.dump(players, f, ensure_ascii=False, indent=4)
+
+
 def get_val(hand):
 
     if isinstance(hand[0], list):
@@ -204,6 +218,8 @@ def place_bet():
     r["chips"][player] -= bet
     r["bets"][player] = bet
 
+    update_player_chips(player, r["chips"][player])
+
     return {
         "ok": True,
         "player": player,
@@ -254,27 +270,39 @@ def game_action():
             dealer_score = get_val(r["dealer_hand"])
 
             for player in r["players"]:
-
                 if player not in r["bets"]:
                     continue
 
                 bet = r["bets"][player]
-                score = get_val(r["hands"][player])
+                hands = r["hands"][player]
 
-                if score > 21:
-                    continue
-                elif dealer_score > 21:
-                    r["chips"][player] += bet * 2
-                elif score > dealer_score:
-                    r["chips"][player] += bet * 2
-                elif score == dealer_score:
-                    r["chips"][player] += bet
+                if not isinstance(hands[0], list):
+                    hands = [hands]
+
+                for hand in hands:
+
+                    score = get_val(hand)
+
+                    if score > 21:
+                        continue
+
+                    elif dealer_score > 21:
+                        r["chips"][player] += bet * 2
+                        update_player_chips(player, r["chips"][player])
+
+                    elif score > dealer_score:
+                        r["chips"][player] += bet * 2
+                        update_player_chips(player, r["chips"][player])
+
+                    elif score == dealer_score:
+                        r["chips"][player] += bet
+                        update_player_chips(player, r["chips"][player])
 
     if action == "split":
 
         hand = r["hands"][player_name]
 
-        if not can_split(hand):
+        if isinstance(hand[0], list) or not can_split(hand):
             return {"error": "Cannot split"}, 400
 
         bet = r["bets"][player_name]
@@ -283,6 +311,10 @@ def game_action():
             return {"error": "Not enough chips"}, 400
 
         r["chips"][player_name] -= bet
+        update_player_chips(
+            player_name,
+            r["chips"][player_name]
+        )
 
         card1 = hand[0]
         card2 = hand[1]
